@@ -118,8 +118,6 @@ fpath=( ~/.zfunc $fpath )
 autoload -Uz ~/.zfunc/wa
 autoload -Uz ~/.zfunc/dkr
 
-# NPM Token for Execution UI
-export NPM_TOKEN="1969f5f9-02ed-44d8-a0df-0c3bfd0a20ed"
 bindkey "^[[A" history-search-backward
 bindkey "^[[B" history-search-forward
 source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme
