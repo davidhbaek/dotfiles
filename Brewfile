@@ -58,3 +58,4 @@ brew "romkatv/powerlevel10k/powerlevel10k"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 cask "okta"
+cask "visual-studio-code"
