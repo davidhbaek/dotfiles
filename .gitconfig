@@ -1,17 +1,1 @@
-[alias]
-	s = status
-	ch = checkout
-	b = branch
-	pl = pull
-	p = push
-	a = add
-	c = commit
-[user]
-	name = davidformation
-	email = 75276692+davidformation@users.noreply.github.com
-[pager]
-	branch = false
-[core]
-	editor = emacs -nw -q
-[branch "master"]
-	pushRemote = no_push
+/Users/david.baek/.gitconfig
