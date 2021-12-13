@@ -11,8 +11,6 @@ tap "romkatv/powerlevel10k"
 brew "aws-okta"
 # Pack, ship and run any application as a lightweight container
 brew "docker", link: false
-# Command-line tool to interact with exercism.io
-brew "exercism"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # Distributed revision control system
@@ -25,12 +23,8 @@ brew "go"
 brew "golangci-lint"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
-# Simple terminal UI for git commands
-brew "lazygit"
 # GNOME XML library
 brew "libxml2"
-# Ambitious Vim-fork focused on extensibility and agility
-brew "neovim"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.8"
 # Interpreted, interactive, object-oriented programming language
@@ -51,8 +45,6 @@ brew "aws/tap/aws-sam-cli"
 brew "dapr/tap/dapr-cli"
 # Terraform
 brew "hashicorp/tap/terraform"
-# YAMAMOTO Mitsuharu's Mac port of GNU Emacs
-brew "railwaycat/emacsmacport/emacs-mac"
 # A Zsh Theme
 brew "romkatv/powerlevel10k/powerlevel10k"
 # Terminal emulator as alternative to Apple's Terminal app
