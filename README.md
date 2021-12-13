@@ -37,3 +37,8 @@ brew bundle --file ~/.dotfiles/Brewfile
 # ...or move to the directory first.
 cd ~/.dotfiles && brew bundle
 ```
+
+5. Install ohmyzsh
+```
+$ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+``` 
