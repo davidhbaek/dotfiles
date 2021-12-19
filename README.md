@@ -5,6 +5,7 @@
 ```zsh
 xcode-select --install
 ```
+<br>
 
 #### 2. Clone repo into new hidden directory.
 
@@ -14,6 +15,7 @@ git clone git@github.com:davidformation/dotfiles.git ~/.dotfiles
 # ...or use HTTPS and switch remotes later.
 git clone https://github.com/davidformation/dotfiles.git ~/.dotfiles
 ```
+<br>
 
 #### 3. Create symlinks in the Home directory to the real files in the repo.
 
@@ -23,6 +25,7 @@ git clone https://github.com/davidformation/dotfiles.git ~/.dotfiles
 ln -s ~/.dotfiles/.zshrc ~/.zshrc
 ln -s ~/.dotfiles/.gitconfig ~/.gitconfig
 ```
+<br>
 
 #### 4. Install Homebrew, then whatever's in the Brewfile.
 
@@ -35,6 +38,7 @@ brew bundle --file ~/.dotfiles/Brewfile
 # ...or move to the directory first.
 cd ~/.dotfiles && brew bundle
 ```
+<br>
 
 #### 5. Install ohmyzsh
 ```
