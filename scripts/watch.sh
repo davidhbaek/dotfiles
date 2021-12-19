@@ -6,7 +6,7 @@ function gob() {
 	printf "$(date) running goimports...\n" && goimports -w . &&
 	printf "$(date) running go build...\n" && go build -tags manual ./... &&  
 	printf "$(date) cleaning test cache...\n" && go clean -testcache &&  
-  printf "$(date) testing...\n" && go test ./... -v --run TestHandler
+  printf "$(date) testing...\n" && go test ./... -v
 	printf "$(date) running golangci-lint...\n" && golangci-lint run --allow-parallel-runners &&
 	printf "$(date) done\n"
 '
