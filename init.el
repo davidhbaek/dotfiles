@@ -1,6 +1,4 @@
 (setq inhibit-startup-message t)
-
-(scroll-bar-mode -1) ; Disable visible scroll bar
 (tool-bar-mode -1)   ; Disable the toolbar
 (tooltip-mode -1)    ; Disable tooltips
 (set-fringe-mode 10) ; Give some breathing room
@@ -117,6 +115,6 @@
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
-(use-package magit
+(use-package magit)
   ;; :custom
-  ;; (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+  ;; (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
