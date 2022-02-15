@@ -137,7 +137,14 @@
 (defun lsp-go-install-save-hooks ()
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
+
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+(add-hook 'go-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook 'gofmt-before-save)
+            (setq tab-width 4)
+            (setq indent-tabs-mode 1)))
 
 ;; Start LSP Mode and YASnippet mode
 (add-hook 'go-mode-hook #'lsp-deferred)
@@ -173,9 +180,18 @@
 
 (add-hook 'after-init-hook 'global-company-mode)
 
-(lsp-register-client
- (make-lsp-client :new-connection (lsp-stdio-connection '("/path/to/terraform-ls/terraform-ls" "serve"))
-                  :major-modes '(terraform-mode)
-                  :server-id 'terraform-ls))
+(with-eval-after-load "company"
+  (define-key company-active-map (kbd "C-k") #'company-select-previous-or-abort)
+  (define-key company-active-map (kbd "C-j") #'company-select-next-or-abort))
 
-(add-hook 'terraform-mode-hook #'lsp)
+(use-package term
+  :config
+  (setq explicit-shell-file-name "zsh")
+  )
+
+(defun shell-other-window ()
+  "Open a `shell' in a new window."
+  (interactive)
+  (let ((buf (shell)))
+    (switch-to-buffer (other-buffer buf))
+    (switch-to-buffer-other-window buf)))
