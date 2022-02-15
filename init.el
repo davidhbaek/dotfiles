@@ -1,13 +1,12 @@
 (setq inhibit-startup-message t)
-(tool-bar-mode -1)   ; Disable the toolbar
-(tooltip-mode -1)    ; Disable tooltips
-(set-fringe-mode 10) ; Give some breathing room
+(toggle-scroll-bar -1) ; Disable scrollbar
+(tool-bar-mode -1)     ; Disable the toolbar
+(tooltip-mode -1)      ; Disable tooltips
+(set-fringe-mode 10)   ; Give some breathing room
 
-(menu-bar-mode -1)   ; Disable the menu bar
+(menu-bar-mode -1)     ; Disable the menu bar
 
-(set-face-attribute 'default nil :height 140)
-
-(load-theme 'doom-zenburn t)
+(set-face-attribute 'default nil :height 150)
 
 ;; Initialize package sources
 (require 'package)
@@ -15,6 +14,9 @@
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
  ("org" . "https://orgmode.org/elpa/")
  ("elpa" . "https://elpa.gnu.org/packages/")))
+
+;; Pick a theme to use here
+(load-theme 'zenburn t)
 
 (package-initialize)
 (unless package-archive-contents
@@ -31,11 +33,11 @@
 (global-linum-mode t)
 
 ;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-		term-mode-hook
-		shell-mode-hook
-		eshell-mode-hook))
-  (add-hook mode (lambda () (display-linum-mode 0))))
+;; (dolist (mode '(org-mode-hook
+;;		term-mode-hook
+;;		shell-mode-hook
+;;		eshell-mode-hook))
+;;  (add-hook mode (lambda () (display-linum-mode 0))))
 
 (use-package command-log-mode)
 
@@ -65,7 +67,6 @@
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 15)))
 
-
 (use-package doom-themes)
 
 (use-package rainbow-delimiters
@@ -73,7 +74,7 @@
 
 (use-package which-key
   :init (which-key-mode)
-  :diminish which-key-mode
+  :diminish which-key-mode		
   :config
   (setq which-key-idle-delay 0.3))
 
@@ -108,13 +109,73 @@
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode)
-  :custom ((projectile-completion-system 'ivy))
+  :custom ((projectile-completion-system 'ivy)))
 
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
-(use-package magit)
-  ;; :custom
-  ;; (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+(use-package magit
+ :commands (magit-status magit-get-current-branch)
+ :custom
+ (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :config
+  (lsp-enable-which-key-integration t))
+
+;; Company mode
+(setq company-idle-delay 0)
+(setq company-minimum-prefix-length 1)
+
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+;; Start LSP Mode and YASnippet mode
+(add-hook 'go-mode-hook #'lsp-deferred)
+(add-hook 'go-mode-hook #'yas-minor-mode)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+
+ '(package-selected-packages
+   '(company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(use-package company
+  :ensure t
+  :config (progn
+            ;; don't add any dely before trying to complete thing being typed
+            ;; the call/response to gopls is asynchronous so this should have little
+            ;; to no affect on edit latency
+            (setq company-idle-delay 0)
+            ;; start completing after a single character instead of 3
+            (setq company-minimum-prefix-length 1)
+            ;; align fields in completions
+            (setq company-tooltip-align-annotations t)
+            )
+  )
+
+(add-hook 'after-init-hook 'global-company-mode)
+
+(lsp-register-client
+ (make-lsp-client :new-connection (lsp-stdio-connection '("/path/to/terraform-ls/terraform-ls" "serve"))
+                  :major-modes '(terraform-mode)
+                  :server-id 'terraform-ls))
+
+(add-hook 'terraform-mode-hook #'lsp)

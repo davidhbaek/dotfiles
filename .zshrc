@@ -112,7 +112,7 @@ alias platform-dev="aws-okta exec formation-platform-dev -- /bin/zsh"
 alias platform-prod="aws-okta exec formation-platform-prod -- /bin/zsh"
 alias ghci='stack ghci'
 alias glc="git rev-parse HEAD | pbcopy | git rev-parse HEAD"
-
+alias emacs-gnu="nohup /Applications/Emacs.app/Contents/MacOS/Emacs"
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=2'
 fpath=( ~/.zfunc $fpath )
