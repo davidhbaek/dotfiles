@@ -290,3 +290,7 @@ Version 2016-04-04"
 ;; Use Shift + arrow keys to move across windows
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
+
+;; Keep cua-mode on so we can use C-x, C-c, and C-v
+;; for cut, copy, and paste
+(cua-mode t)
