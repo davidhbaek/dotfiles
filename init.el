@@ -174,7 +174,10 @@
 
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+(global-set-key (kbd "C-?") 'mc/mark-all-like-this)
+(global-set-key (kbd "C-w") 'kill-ring-save)
+(global-set-key (kbd "M-w") 'kill-whole-line)
+
 
 (defun xah-pop-local-mark-ring ()
   "Move cursor to last mark position of current buffer.
