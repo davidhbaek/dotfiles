@@ -6,7 +6,7 @@
 
 (menu-bar-mode -1)     ; Disable the menu bar
 
-(set-face-attribute 'default nil :height 150)
+(set-face-attribute 'default nil :height 180)
 
 ;; Initialize package sources
 (require 'package)
@@ -33,11 +33,19 @@
 (global-linum-mode t)
 
 ;; Disable line numbers for some modes
-;; (dolist (mode '(org-mode-hook
-;;		term-mode-hook
-;;		shell-mode-hook
-;;		eshell-mode-hook))
-;;  (add-hook mode (lambda () (display-linum-mode 0))))
+(dolist (mode '(org-mode-hook
+		term-mode-hook
+		shell-mode-hook
+		eshell-mode-hook))
+ (add-hook mode (lambda () (display-linum-mode 0))))
+
+;; Allow for multiple cursors
+(use-package multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+
+;; MoveText
+(use-package move-text)
+(move-text-default-bindings)
 
 (use-package command-log-mode)
 
@@ -50,14 +58,14 @@
          ("TAB" . ivy-alt-done)
          ("C-f" . ivy-alt-done)
          ("C-l" . ivy-alt-done)
-         ("C-j" . ivy-next-line)
-         ("C-k" . ivy-previous-line)
+         ("C-n" . ivy-next-line)
+         ("C-p" . ivy-previous-line)
          :map ivy-switch-buffer-map
-         ("C-k" . ivy-previous-line)
+         ("C-p" . ivy-previous-line)
          ("C-l" . ivy-done)
          ("C-d" . ivy-switch-buffer-kill)
          :map ivy-reverse-i-search-map
-         ("C-k" . ivy-previous-line)
+         ("C-p" . ivy-previous-line)
          ("C-d" . ivy-reverse-i-search-kill))
   :config
   (ivy-mode 1))
@@ -154,15 +162,43 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-
  '(package-selected-packages
-   '(company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
+   '(magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
+(defun xah-pop-local-mark-ring ()
+  "Move cursor to last mark position of current buffer.
+Call this repeatedly will cycle all positions in `mark-ring'.
+URL `http://xahlee.info/emacs/emacs/emacs_jump_to_previous_position.html'
+Version 2016-04-04"
+  (interactive)
+  (set-mark-command t))
+
+(global-set-key (kbd "C-j") 'pop-global-mark)
+
+(defun unpop-to-mark-command ()
+    "Unpop off mark ring. Does nothing if mark ring is empty."
+    (interactive)
+    (when mark-ring
+      (let ((pos (marker-position (car (last mark-ring)))))
+        (if (not (= (point) pos))
+            (goto-char pos)
+          (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+          (set-marker (mark-marker) pos)
+          (setq mark-ring (nbutlast mark-ring))
+          (goto-char (marker-position (car (last mark-ring))))))))
+(global-set-key (kbd "C-k") 'unpop-to-mark-command)
+
 
 (use-package company
   :ensure t
@@ -195,3 +231,62 @@
   (let ((buf (shell)))
     (switch-to-buffer (other-buffer buf))
     (switch-to-buffer-other-window buf)))
+
+(defun db/org-mode-setup()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (auto-fill-mode 0)
+  (visual-line-mode 1))
+
+(use-package org
+;;  :hook (org-mode . db/org-mode-setup)
+  :config
+  (setq org-ellipsis " ▾"))
+
+;;(setenv "PATH" (concat (getenv "PATH") ":/Users/david.baek/go"))
+
+(setenv "GOPATH" "/Users/david.baek/go")
+(setenv "PATH" "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/david.baek/go/bin:/Users/david.baek/go/bin")
+
+(use-package org-superstar
+  :after org
+  :hook (org-mode . org-superstar-mode)
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+(setq backup-directory-alist `(("." . "~/.saves")))
+
+
+;; Open Pull requests from Magit
+
+;; Set default browser as default OS X browser
+(setq browse-url-browser-function 'browse-url-default-macosx-browser)
+;; original
+
+(defun endless/visit-pull-request-url ()
+  "Visit the current branch's PR on Github."
+  (interactive)
+  (browse-url
+   (format "https://github.com/%s/pull/new/%s"
+           (replace-regexp-in-string
+            "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+            (magit-get "remote"
+                       (magit-get-push-remote)
+                       "url"))
+           (magit-get-current-branch))))
+
+(eval-after-load 'magit
+  '(define-key magit-mode-map "v"
+     #'endless/visit-pull-request-url))
+
+;; Use Shift + arrow keys to move across windows
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings))
