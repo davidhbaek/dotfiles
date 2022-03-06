@@ -32,12 +32,8 @@
 (column-number-mode)
 (global-linum-mode t)
 
-;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-		term-mode-hook
-		shell-mode-hook
-		eshell-mode-hook))
- (add-hook mode (lambda () (display-linum-mode 0))))
+;; Disable line numbers for org mode
+(add-hook 'org-mode-hook (lambda () (linum-mode 0)))
 
 ;; Allow for multiple cursors
 (use-package multiple-cursors)
@@ -163,7 +159,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
+   '(org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -242,9 +238,13 @@ Version 2016-04-04"
   (visual-line-mode 1))
 
 (use-package org
-;;  :hook (org-mode . db/org-mode-setup)
+  :hook (org-mode . db/org-mode-setup)
   :config
   (setq org-ellipsis " ▾"))
+
+(use-package org-tree-slide
+  :custom
+  (org-imagine-actual-width nil))
 
 ;;(setenv "PATH" (concat (getenv "PATH") ":/Users/david.baek/go"))
 
