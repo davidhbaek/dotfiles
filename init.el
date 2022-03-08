@@ -38,6 +38,7 @@
 ;; Allow for multiple cursors
 (use-package multiple-cursors)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(setq org-hide-emphasis-markers t)
 
 ;; MoveText
 (use-package move-text)
@@ -132,6 +133,10 @@
   :config
   (lsp-enable-which-key-integration t))
 
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.opt\\'"))
+
+(use-package json-mode)
 ;; Company mode
 (setq company-idle-delay 0)
 (setq company-minimum-prefix-length 1)
@@ -159,7 +164,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
+   '(json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -172,7 +177,7 @@
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-?") 'mc/mark-all-like-this)
 (global-set-key (kbd "C-w") 'kill-ring-save)
-(global-set-key (kbd "M-w") 'kill-whole-line)
+(global-set-key (kbd "M-w") 'kill-region)
 
 
 (defun xah-pop-local-mark-ring ()
