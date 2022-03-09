@@ -16,6 +16,15 @@
 ;; Remember the last place you opened a file
 (save-place-mode 1)
 
+;; Don't use the pop up box
+(setq use-dialog-box nil)
+
+;; Revert buffers when the file changes on disk
+(global-auto-revert-mode 1)
+
+;; Revert Dired and other buffers
+(setq global-auto-revert-non-file-buffers 1)
+
 (set-face-attribute 'default nil :height 180)
 
 ;; Initialize package sources
