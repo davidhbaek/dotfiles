@@ -6,6 +6,8 @@
 
 (menu-bar-mode -1)     ; Disable the menu bar
 
+(recentf-mode 1)
+
 (set-face-attribute 'default nil :height 180)
 
 ;; Initialize package sources
