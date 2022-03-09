@@ -6,7 +6,15 @@
 
 (menu-bar-mode -1)     ; Disable the menu bar
 
+;; Search through recently opened files
 (recentf-mode 1)
+
+;; Save the history of inputs to the minibuffer
+(setq history-length 25)
+(savehist-mode 1)
+
+;; Remember the last place you opened a file
+(save-place-mode 1)
 
 (set-face-attribute 'default nil :height 180)
 
