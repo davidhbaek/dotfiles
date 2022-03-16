@@ -12,6 +12,4 @@
 [pager]
 	branch = false
 [core]
-	editor = '/Applications/Visual Studio Code.app/Contents/MacOS/Electron' -w
-[branch "master"]
 	pushRemote = no_push
