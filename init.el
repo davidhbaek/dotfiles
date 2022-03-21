@@ -155,6 +155,8 @@
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.opt\\'"))
 
+
+(setq lsp-enable-file-watchers nil)
 (use-package json-mode)
 ;; Company mode
 (setq company-idle-delay 0)
