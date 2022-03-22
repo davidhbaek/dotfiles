@@ -289,13 +289,6 @@ Version 2016-04-04"
 (setenv "GOPATH" "/Users/david.baek/go")
 (setenv "PATH" "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/david.baek/go/bin:/Users/david.baek/go/bin")
 
-(use-package org-superstar
-  :after org
-  :hook (org-mode . org-superstar-mode)
-  :custom
-  (org-superstar-remove-leading-stars t)
-  (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
-
 (setq backup-directory-alist `(("." . "~/.saves")))
 
 (setq org-src-tab-acts-natively t)
@@ -357,9 +350,33 @@ Version 2016-04-04"
   (bind-key "<tab>" #'dired-subtree-toggle dired-mode-map)
   (bind-key "<backtab>" #'dired-subtree-cycle dired-mode-map))
 
-;; (require 'ls-lisp)
-;; (setq ls-lisp-dirs-first t)
-;; (setq ls-lisp-use-insert-directory-program nil)
-
 (when (string= system-type "darwin")
   (setq dired-use-ls-dired nil))
+
+;; Use different font faces for different org mode blocks
+(custom-theme-set-faces
+ 'user
+ '(fixed-pitch ((t ( :family "Monospace"))))
+ '(variable-pitch ((t (:family "Charter" :height 190)))))
+
+(defun set-buffer-variable-pitch ()
+  (interactive)
+  (variable-pitch-mode t)
+  (setq line-spacing 3)
+  (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
+  )
+
+(add-hook 'org-mode-hook 'set-buffer-variable-pitch)
+(add-hook 'org-mode-hook 'visual-line-mode)
+
+
+
+
+(use-package org-superstar
+  :after org
+  :hook (org-mode . org-superstar-mode)
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
