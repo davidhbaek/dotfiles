@@ -268,15 +268,26 @@ Version 2016-04-04"
   :config
   (setq org-ellipsis " ▾"))
 
-(use-package org-tree-slide
-  :custom
-  (org-imagine-actual-width nil))
+(defun efs/presentation-setup()
+  (setq text-scale-mode-amount 3)
+  (org-display-inline-images)
+  (text-scale-mode 1))
 
-;;(setenv "PATH" (concat (getenv "PATH") ":/Users/david.baek/go"))
+(defun efs/presentation-end()
+  (text-scale-mode 0))
+
+(use-package org-tree-slide
+  :hook ((org-tree-slide-play . efs/presentation-setup)
+	 (org-tree-slide-stop . efs/presentation-end))
+  :custom
+  (org-tree-slide-slide-in-effect t)
+  (org-tree-slide-activate-message "Presentation start")
+  (org-tree-slide-deactive-message "Presentation end")
+  (org-tree-slide-header t)
+  (org-tree-slide-breadcrumbs " // " ))
 
 (setenv "GOPATH" "/Users/david.baek/go")
 (setenv "PATH" "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/david.baek/go/bin:/Users/david.baek/go/bin")
-
 
 (use-package org-superstar
   :after org
@@ -287,6 +298,7 @@ Version 2016-04-04"
 
 (setq backup-directory-alist `(("." . "~/.saves")))
 
+(setq org-src-tab-acts-natively t)
 
 ;; Open Pull requests from Magit
 
