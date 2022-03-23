@@ -176,6 +176,13 @@
             (setq tab-width 4)
             (setq indent-tabs-mode 1)))
 
+(add-hook 'go-mode-hook
+          (lambda ()
+            (define-key go-mode-map "\"" 'electric-pair)
+            (define-key go-mode-map "\'" 'electric-pair)
+            (define-key go-mode-map "(" 'electric-pair)
+            (define-key go-mode-map "[" 'electric-pair)
+            (define-key go-mode-map "{" 'electric-pair)))
 ;; Start LSP Mode and YASnippet mode
 (add-hook 'go-mode-hook #'lsp-deferred)
 (add-hook 'go-mode-hook #'yas-minor-mode)
@@ -269,7 +276,7 @@ Version 2016-04-04"
   (setq org-ellipsis " ▾"))
 
 (defun efs/presentation-setup()
-  (setq text-scale-mode-amount 3)
+  (setq text-scale-mode-amount 2)
   (org-display-inline-images)
   (text-scale-mode 1))
 
@@ -357,7 +364,7 @@ Version 2016-04-04"
 (custom-theme-set-faces
  'user
  '(fixed-pitch ((t ( :family "Monospace"))))
- '(variable-pitch ((t (:family "Charter" :height 190)))))
+ '(variable-pitch ((t (:family "DejaVu Sans Mono")))))
 
 (defun set-buffer-variable-pitch ()
   (interactive)
@@ -371,12 +378,24 @@ Version 2016-04-04"
 (add-hook 'org-mode-hook 'set-buffer-variable-pitch)
 (add-hook 'org-mode-hook 'visual-line-mode)
 
-
-
-
 (use-package org-superstar
   :after org
   :hook (org-mode . org-superstar-mode)
   :custom
   (org-superstar-remove-leading-stars t)
   (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+(defun electric-pair ()
+  "If at end of line, insert character pair without surrounding spaces.
+   Otherwise, just insert the typed character."
+  (interactive)
+  (if (eolp) (let (parens-require-spaces) (insert-pair)) 
+    (self-insert-command 1)))
+
+(add-hook 'python-mode-hook
+          (lambda ()
+            (define-key python-mode-map "\"" 'electric-pair)
+            (define-key python-mode-map "\'" 'electric-pair)
+            (define-key python-mode-map "(" 'electric-pair)
+            (define-key python-mode-map "[" 'electric-pair)
+            (define-key python-mode-map "{" 'electric-pair)))
