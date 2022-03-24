@@ -7,8 +7,8 @@
 	a = add
 	c = commit
 [user]
-	name = davidformation
-	email = 75276692+davidformation@users.noreply.github.com
+	name = davidhbaek
+	email = 75276692+davidhbaek@users.noreply.github.com
 [pager]
 	branch = false
 [core]
