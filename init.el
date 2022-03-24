@@ -192,13 +192,14 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
+   '(ivy-prescient dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(fixed-pitch ((t (:family "Monospace"))))
+ '(variable-pitch ((t (:family "DejaVu Sans Mono")))))
 
 
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -399,3 +400,16 @@ Version 2016-04-04"
             (define-key python-mode-map "(" 'electric-pair)
             (define-key python-mode-map "[" 'electric-pair)
             (define-key python-mode-map "{" 'electric-pair)))
+
+;; Prescient
+
+(use-package ivy-prescient
+  :after counsel
+  :config
+  (ivy-prescient-mode 1))
+
+(setq prescient-sort-length-enable nil)
+
+(setq ivy-prescient-sort-commands '(:not swiper swiper-isearch ivy-switch-buffer counsel-find-file))
+
+(setq ivy-prescient-retain-classic-highlighting t)
