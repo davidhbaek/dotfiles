@@ -33,6 +33,7 @@
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
  ("org" . "https://orgmode.org/elpa/")
  ("elpa" . "https://elpa.gnu.org/packages/")))
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 ;; Pick a theme to use here
 (load-theme 'zenburn t)
@@ -114,6 +115,7 @@
   :bind (("M-x" . counsel-M-x)
 	 ("C-x b" . counsel-ibuffer)
 	 ("C-x C-f" . counsel-find-file)
+	 ("C-x r j" . counsel-register)
 	 :map minibuffer-local-map
 	 ("C-r" . counsel-minibuffer-history))
   :config
@@ -183,6 +185,14 @@
             (define-key go-mode-map "(" 'electric-pair)
             (define-key go-mode-map "[" 'electric-pair)
             (define-key go-mode-map "{" 'electric-pair)))
+
+(add-hook 'js2-mode-hook
+          (lambda ()
+            (define-key go-mode-map "\"" 'electric-pair)
+            (define-key go-mode-map "\'" 'electric-pair)
+            (define-key go-mode-map "(" 'electric-pair)
+            (define-key go-mode-map "[" 'electric-pair)
+            (define-key go-mode-map "{" 'electric-pair)))
 ;; Start LSP Mode and YASnippet mode
 (add-hook 'go-mode-hook #'lsp-deferred)
 (add-hook 'go-mode-hook #'yas-minor-mode)
@@ -192,7 +202,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(flycheck org-roam ivy-prescient dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
+   '(rjsx-mode web-mode tide lsp-tailwindcss ox-hugo js2-mode typescript-mode org-jira haskell-mode avy anzu flycheck-golangci-lint flycheck org-roam ivy-prescient dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -330,7 +340,7 @@ Version 2016-04-04"
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
 
-(add-hook 'terraform-mode-hook #'terraform-format-on-save-mode)
+;; (add-hook 'terraform-mode-hook #'terraform-format-on-save-mode)
 
 (defun markdown-html (buffer)
   (princ (with-current-buffer buffer
@@ -413,6 +423,7 @@ Version 2016-04-04"
 
 (setq ivy-prescient-retain-classic-highlighting t)
 
+(setq prescient-filter-method '(literal initialism regexp))
 
 ;; Org Roam
 (use-package org-roam
@@ -429,9 +440,88 @@ Version 2016-04-04"
   (org-roam-setup))
 
 (setq org-todo-keywords
-      '((sequence "TODO" "IN-PROGRESS" "QA" "|" "DONE" "DELEGATED")))
+      '((sequence "TODO" "IN-PROGRESS" "QA" "|" "DONE")))
 
 ;; Flycheck
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
+
+(setq org-startup-with-inline-images t)
+
+(use-package flycheck-golangci-lint
+  :ensure t
+  :hook (go-mode . flycheck-golangci-lint-setup))
+
+(global-anzu-mode +1)
+(anzu-mode +1)
+(global-set-key (kbd "M-%") 'anzu-query-replace)
+(global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
+
+(setq jiralib-url "https://formation.atlassian.net")
+
+(add-to-list 'load-path "/path/to/jq-mode-dir")
+(autoload 'jq-mode "jq-mode.el"
+    "Major mode for editing jq files" t)
+(add-to-list 'auto-mode-alist '("\\.jq$" . jq-mode))
+
+;; registers
+(setq dotfiles-directory "~/.dotfiles/")
+(set-register ?i (cons 'file (concat dotfiles-directory "init.el")))
+(set-register ?w (cons 'file (concat dotfiles-directory "scripts/watch.sh")))
+
+(defun my-markdown-filter (buffer)
+  (princ
+   (with-temp-buffer
+     (let ((tmp (buffer-name)))
+       (set-buffer buffer)
+       (set-buffer (markdown tmp))
+       (format "<!DOCTYPE html><html><title>Markdown preview</title><link rel=\"stylesheet\" href = \"https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css\"/>
+<body><article class=\"markdown-body\" style=\"box-sizing: border-box;min-width: 200px;max-width: 980px;margin: 0 auto;padding: 45px;\">%s</article></body></html>" (buffer-string))))
+   (current-buffer)))
+
+(defun my-markdown-preview ()
+  "Preview markdown."
+  (interactive)
+  (unless (process-status "httpd")
+    (httpd-start))
+  (impatient-mode)
+  (imp-set-user-filter 'my-markdown-filter)
+  (imp-visit-buffer))
+
+(use-package ox-hugo
+  :ensure t   ;Auto-install the package from Melpa
+  :pin melpa  ;`package-archives' should already have ("melpa" . "https://melpa.org/packages/")
+  :after ox)
+
+
+(use-package tide
+  :ensure t
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
+
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode))))
+;; enable typescript-tslint checker
+(flycheck-add-mode 'typescript-tslint 'web-mode)
+
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "jsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode))))
+;; configure jsx-tide checker to run after your default jsx checker
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+
+
+(setq-default tab-width 4)
+(setq-default typescript-indent-level 2)
+
+
