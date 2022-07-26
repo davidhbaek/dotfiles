@@ -10,7 +10,7 @@ fi
 PATH=$PATH:$HOME/go/bin
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/david.baek/.oh-my-zsh"
+export ZSH="/Users/baekdavid/.oh-my-zsh"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
