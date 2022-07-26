@@ -202,7 +202,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(rjsx-mode web-mode tide lsp-tailwindcss ox-hugo js2-mode typescript-mode org-jira haskell-mode avy anzu flycheck-golangci-lint flycheck org-roam ivy-prescient dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
+   '(anzua rjsx-mode web-mode tide lsp-tailwindcss ox-hugo js2-mode typescript-mode org-jira haskell-mode avy anzu flycheck-golangci-lint flycheck org-roam ivy-prescient dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -453,11 +453,6 @@ Version 2016-04-04"
   :ensure t
   :hook (go-mode . flycheck-golangci-lint-setup))
 
-(global-anzu-mode +1)
-(anzu-mode +1)
-(global-set-key (kbd "M-%") 'anzu-query-replace)
-(global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
-
 (setq jiralib-url "https://formation.atlassian.net")
 
 (add-to-list 'load-path "/path/to/jq-mode-dir")
@@ -501,25 +496,6 @@ Version 2016-04-04"
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)
          (before-save . tide-format-before-save)))
-
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
-(add-hook 'web-mode-hook
-          (lambda ()
-            (when (string-equal "tsx" (file-name-extension buffer-file-name))
-              (setup-tide-mode))))
-;; enable typescript-tslint checker
-(flycheck-add-mode 'typescript-tslint 'web-mode)
-
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
-(add-hook 'web-mode-hook
-          (lambda ()
-            (when (string-equal "jsx" (file-name-extension buffer-file-name))
-              (setup-tide-mode))))
-;; configure jsx-tide checker to run after your default jsx checker
-(flycheck-add-mode 'javascript-eslint 'web-mode)
-
 
 (setq-default tab-width 4)
 (setq-default typescript-indent-level 2)
