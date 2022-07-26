@@ -1,3 +1,11 @@
+# Backup machine
+
+#### 1. Create Brewfile
+
+```zsh
+brew bundle dump
+```
+
 # Bootstrap a new Mac
 
 #### 1. Install Apple's Command Line Tools, (needed for Git and Homebrew.)
