@@ -27,6 +27,10 @@
 
 (set-face-attribute 'default nil :height 180)
 
+
+(setenv "GOPATH" "/Users/baekdavid/go")
+(setenv "PATH" "/Users/baekdavid/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+
 ;; Initialize package sources
 (require 'package)
 
@@ -154,6 +158,14 @@
   :config
   (lsp-enable-which-key-integration t))
 
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.opt\\'"))
 
@@ -169,8 +181,6 @@
 (defun lsp-go-install-save-hooks ()
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
-
-(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 (add-hook 'go-mode-hook
           (lambda ()
@@ -304,8 +314,6 @@ Version 2016-04-04"
   (org-tree-slide-header t)
   (org-tree-slide-breadcrumbs " // " ))
 
-(setenv "GOPATH" "/Users/david.baek/go")
-(setenv "PATH" "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/david.baek/go/bin:/Users/david.baek/go/bin")
 
 (setq backup-directory-alist `(("." . "~/.saves")))
 
@@ -449,9 +457,6 @@ Version 2016-04-04"
 
 (setq org-startup-with-inline-images t)
 
-(use-package flycheck-golangci-lint
-  :ensure t
-  :hook (go-mode . flycheck-golangci-lint-setup))
 
 (setq jiralib-url "https://formation.atlassian.net")
 
