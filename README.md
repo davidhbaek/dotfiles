@@ -1,4 +1,4 @@
-# Backup machine
+# Backup the brews installed on your machine
 
 #### 1. Create Brewfile
 
