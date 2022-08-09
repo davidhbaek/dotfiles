@@ -16,6 +16,7 @@
 ;; Remember the last place you opened a file
 (save-place-mode 1)
 
+
 ;; Don't use the pop up box
 (setq use-dialog-box nil)
 
@@ -28,8 +29,8 @@
 (set-face-attribute 'default nil :height 180)
 
 
-(setenv "GOPATH" "/Users/baekdavid/go")
-(setenv "PATH" "/Users/baekdavid/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+(setenv "GOPATH" "/Users/davidbaek/go")
+(setenv "PATH" "/Users/davidbaek/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
 
 ;; Initialize package sources
 (require 'package)
@@ -39,7 +40,9 @@
  ("elpa" . "https://elpa.gnu.org/packages/")))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
+
 ;; Pick a theme to use here
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'zenburn t)
 
 (package-initialize)
@@ -205,7 +208,6 @@
             (define-key go-mode-map "{" 'electric-pair)))
 ;; Start LSP Mode and YASnippet mode
 (add-hook 'go-mode-hook #'lsp-deferred)
-(add-hook 'go-mode-hook #'yas-minor-mode)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
