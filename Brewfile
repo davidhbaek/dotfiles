@@ -8,6 +8,8 @@ tap "homebrew/core"
 tap "oktadeveloper/tap"
 tap "railwaycat/emacsmacport"
 tap "romkatv/powerlevel10k"
+brew "python@3.10"
+brew "awscli"
 brew "coreutils"
 brew "docker", link: false
 brew "fzf"
