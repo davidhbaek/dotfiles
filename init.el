@@ -179,6 +179,7 @@
 (setq company-idle-delay 0)
 (setq company-minimum-prefix-length 1)
 
+(setq gofmt-command "goimports")
 ;; Set up before-save hooks to format buffer and add/delete imports.
 ;; Make sure you don't have other gofmt/goimports hooks enabled.
 (defun lsp-go-install-save-hooks ()
