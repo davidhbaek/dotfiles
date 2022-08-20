@@ -27,20 +27,22 @@ git clone git@github.com:davidhbaek/dotfiles.git ~/.dotfiles
 ```zsh
 ln -s ~/.dotfiles/.zshrc ~/.zshrc
 ln -s ~/.dotfiles/.gitconfig ~/.gitconfig
+ln -s ~/.dotfiles/.zprofile ~/.zprofile
 ```
 <br>
 
 #### 4. Install Homebrew, then whatever's in the Brewfile.
 
 ```zsh
-# install homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-# install brews
+```
+
+```zsh
 brew bundle --file ~/.dotfiles/Brewfile
 ```
 <br>
 
 #### 5. Install ohmyzsh
 ```
-$ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
