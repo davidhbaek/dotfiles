@@ -105,6 +105,8 @@ alias platform-prod="aws-okta exec formation-platform-prod -- /bin/zsh"
 alias ghci='stack ghci'
 alias glc="git rev-parse HEAD | pbcopy | git rev-parse HEAD"
 alias emacs-gnu='$(/Applications/Emacs.app/Contents/MacOS/Emacs "$@")'
+# alias act because of the M1 chip warning
+alias act="act --container-architecture linux/amd64"
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=2'
 fpath=( ~/.zfunc $fpath )
