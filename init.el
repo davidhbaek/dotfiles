@@ -65,7 +65,39 @@
 ;; Allow for multiple cursors
 (use-package multiple-cursors)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+
+
+(custom-set-variables
+ '(markdown-command "/usr/local/bin/pandoc"))
+;; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
 (setq org-hide-emphasis-markers t)
+(font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+(use-package org-bullets
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+ (let* ((variable-tuple
+          (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+                ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+                ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+                ((x-list-fonts "Verdana")         '(:font "Verdana"))
+                ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+                (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+        (headline           `(:inherit default)))
+   (custom-theme-set-faces
+    'user
+    `(org-level-8 ((t (,@headline ,@variable-tuple))))
+    `(org-level-7 ((t (,@headline ,@variable-tuple))))
+    `(org-level-6 ((t (,@headline ,@variable-tuple))))
+    `(org-level-5 ((t (,@headline ,@variable-tuple))))
+    `(org-level-4 ((t (,@headline ,@variable-tuple))))
+    `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.1))))
+    `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
+    `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.5))))
+    `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+
+  (add-hook 'org-mode-hook 'visual-line-mode)
 
 ;; MoveText
 (use-package move-text)
@@ -215,7 +247,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(anzua rjsx-mode web-mode tide lsp-tailwindcss ox-hugo js2-mode typescript-mode org-jira haskell-mode avy anzu flycheck-golangci-lint flycheck org-roam ivy-prescient dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
+   '(syslog-mode anzua rjsx-mode web-mode tide lsp-tailwindcss ox-hugo js2-mode typescript-mode org-jira haskell-mode avy anzu flycheck-golangci-lint flycheck org-roam ivy-prescient dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -508,4 +540,4 @@ Version 2016-04-04"
 (setq-default tab-width 4)
 (setq-default typescript-indent-level 2)
 
-
+(global-anzu-mode +1)
