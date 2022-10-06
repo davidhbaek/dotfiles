@@ -112,6 +112,9 @@ alias act="act --container-architecture linux/amd64"
 alias pip="pip3"
 alias python="python3"
 
+# or awslocal
+alias awsl="awslocal"
+
 
 FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT='true' # opt out of sending Azure Functions Core CLI usage
 
