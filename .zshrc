@@ -108,6 +108,13 @@ alias emacs-gnu='$(/Applications/Emacs.app/Contents/MacOS/Emacs "$@")'
 # alias act because of the M1 chip warning
 alias act="act --container-architecture linux/amd64"
 
+# No more writing 3
+alias pip="pip3"
+alias python="python3"
+
+
+FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT='true' # opt out of sending Azure Functions Core CLI usage
+
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=2'
 fpath=( ~/.zfunc $fpath )
 autoload -Uz ~/.zfunc/wa
