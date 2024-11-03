@@ -30,7 +30,8 @@
 
 
 (setenv "GOPATH" "/Users/davidbaek/go")
-(setenv "PATH" "/Users/davidbaek/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+;; (setenv "PATH" "/Users/davidbaek/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+(setenv "PATH" "/Users/davidbaek/.cabal/bin:/Users/davidbaek/.ghcup/bin:/Users/davidbaek/google-cloud-sdk/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/davidbaek/go/bin:/Users/davidbaek/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/davidbaek/go/bin:/usr/local/go/bin")
 
 ;; Initialize package sources
 (require 'package)
@@ -38,7 +39,7 @@
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
  ("org" . "https://orgmode.org/elpa/")
  ("elpa" . "https://elpa.gnu.org/packages/")))
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
 
 
 ;; Pick a theme to use here
@@ -66,9 +67,15 @@
 (use-package multiple-cursors)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 
-
 (custom-set-variables
- '(markdown-command "/usr/local/bin/pandoc"))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(markdown-command "/usr/local/bin/pandoc")
+ '(org-agenda-files '("~/Desktop/life/trips.org"))
+ '(package-selected-packages
+   '(python-black rustic rust-mode tern xref-js2 spacemacs-theme js2-refactor syslog-mode anzua rjsx-mode web-mode tide lsp-tailwindcss ox-hugo js2-mode typescript-mode org-jira haskell-mode avy anzu flycheck-golangci-lint flycheck org-roam ivy-prescient dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
 ;; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
 (setq org-hide-emphasis-markers t)
 (font-lock-add-keywords 'org-mode
@@ -241,19 +248,23 @@
             (define-key go-mode-map "{" 'electric-pair)))
 ;; Start LSP Mode and YASnippet mode
 (add-hook 'go-mode-hook #'lsp-deferred)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(syslog-mode anzua rjsx-mode web-mode tide lsp-tailwindcss ox-hugo js2-mode typescript-mode org-jira haskell-mode avy anzu flycheck-golangci-lint flycheck org-roam ivy-prescient dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
+(yas-global-mode 1)
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(fixed-pitch ((t (:family "Monospace"))))
+ '(org-document-title ((t (:inherit default :font "Lucida Grande" :height 2.0 :underline nil))))
+ '(org-level-1 ((t (:inherit default :font "Lucida Grande" :height 1.5))))
+ '(org-level-2 ((t (:inherit default :font "Lucida Grande" :height 1.3))))
+ '(org-level-3 ((t (:inherit default :font "Lucida Grande" :height 1.1))))
+ '(org-level-4 ((t (:inherit default :font "Lucida Grande"))))
+ '(org-level-5 ((t (:inherit default :font "Lucida Grande"))))
+ '(org-level-6 ((t (:inherit default :font "Lucida Grande"))))
+ '(org-level-7 ((t (:inherit default :font "Lucida Grande"))))
+ '(org-level-8 ((t (:inherit default :font "Lucida Grande"))))
  '(variable-pitch ((t (:family "DejaVu Sans Mono")))))
 
 
@@ -302,16 +313,28 @@ Version 2016-04-04"
             )
   )
 
-(add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'after-init-hook 'global-company-mode)                           
 
 (with-eval-after-load "company"
   (define-key company-active-map (kbd "C-k") #'company-select-previous-or-abort)
   (define-key company-active-map (kbd "C-j") #'company-select-next-or-abort))
 
+(add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+(eval-after-load 'tern
+   '(progn
+      (require 'tern-auto-complete)
+      (tern-ac-setup)))
+
+(defun delete-tern-process ()
+  (interactive)
+  (delete-process "Tern"))
+
 (use-package term
   :config
   (setq explicit-shell-file-name "zsh")
   )
+
+
 
 (defun shell-other-window ()
   "Open a `shell' in a new window."
@@ -472,7 +495,7 @@ Version 2016-04-04"
 (use-package org-roam
   :ensure t
   :custom
-  (org-roam-directory "~/Documents/Org-Roam-Notes")
+  (org-roam-directory "~/Documents/org-roam")
   (org-roam-completion-everywhere t)
   :bind (("C-c n l" . org-roam-buffer-toggle)
 	 ("C-c n f" . org-roam-node-find)
@@ -541,3 +564,30 @@ Version 2016-04-04"
 (setq-default typescript-indent-level 2)
 
 (global-anzu-mode +1)
+(anzu-mode +1)
+(global-set-key [remap query-replace] 'anzu-query-replace)
+(global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
+
+;; JavaScript IDE setup
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+;; Better imenu
+(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
+
+(require 'js2-refactor)
+(require 'xref-js2)
+
+(add-hook 'js2-mode-hook #'js2-refactor-mode)
+(js2r-add-keybindings-with-prefix "C-c C-r")
+(define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+
+;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
+;; unbind it.
+(define-key js-mode-map (kbd "M-.") nil)
+
+(add-hook 'js2-mode-hook (lambda ()
+  (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
+(define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+
+(setq lsp-go-use-gofumpt t)
