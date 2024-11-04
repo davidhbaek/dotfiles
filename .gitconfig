@@ -5,5 +5,3 @@
 	branch = false
 [core]
 	pushRemote = no_push
-[url "git@github.com:"]
-	insteadOf = https://github.com/

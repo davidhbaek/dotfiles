@@ -58,7 +58,7 @@
 (setq use-package-always-ensure t)
 
 (column-number-mode)
-(global-linum-mode t)
+(global-display-line-numbers-mode t)
 
 ;; Disable line numbers for org mode
 (add-hook 'org-mode-hook (lambda () (linum-mode 0)))
@@ -149,14 +149,6 @@
   :config
   (setq which-key-idle-delay 0.3))
 
-(use-package ivy-rich
-  :ensure t
-  :init (ivy-rich-mode 1))
-
-(use-package all-the-icons-ivy-rich
-  :ensure t
-  :init (all-the-icons-ivy-rich-mode 1))
-
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
 	 ("C-x b" . counsel-ibuffer)
@@ -166,6 +158,14 @@
 	 ("C-r" . counsel-minibuffer-history))
   :config
   (setq ivy-initial-inputs-alist nil)) ; Don't start searches with ^
+
+(use-package ivy-rich
+  :ensure t
+  :init (ivy-rich-mode 1))
+
+(use-package all-the-icons-ivy-rich
+  :ensure t
+  :init (all-the-icons-ivy-rich-mode 1))
 
 (use-package helpful
   :custom
@@ -177,6 +177,11 @@
   ([remap describe-variable] . helpful-variable)
   ([remap describe-command] . helpful-command)
   ([remap describe-key] . helpful-key))
+
+(use-package yasnippet
+  :ensure t
+  :init
+  (yas-global-mode 1))
 
 (use-package projectile
   :diminish projectile-mode
