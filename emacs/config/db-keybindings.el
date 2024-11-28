@@ -12,11 +12,13 @@
 
 ;; Move text up/down
 (use-package move-text
+  :defer
   :ensure t)
 (move-text-default-bindings)  ; M-up/M-down to move lines/regions
 
 ;; Multiple cursors for simultaneous editing
 (use-package multiple-cursors
+  :defer
   :bind
   (("C->" . mc/mark-next-like-this)         ; Mark next occurrence
    ("C-<" . mc/mark-previous-like-this)     ; Mark previous occurrence
