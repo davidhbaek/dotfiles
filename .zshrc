@@ -6,11 +6,12 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-PATH=$PATH:$HOME/go/bin
+export PATH=$PATH:$HOME/go/bin
+export GOPATH=$HOME/go
+export PATH="${PATH}:${GOPATH}/bin"
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/davidbaek/.oh-my-zsh"
+export ZSH="/Users/david.baek/.oh-my-zsh"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -64,7 +65,7 @@ DISABLE_MAGIC_FUNCTIONS="true"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(zsh-autosuggestions direnv zsh-syntax-highlighting)
 # User configuration
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -115,7 +116,8 @@ alias python="python3"
 # or awslocal
 alias awsl="awslocal"
 
-
+# alias for Tackle to set AWS_PROFILE, login to code artifact to pull libraries, and log in to SSO
+alias start-day='(export AWS_PROFILE=mgmt-appeng && aws sso login && aws codeartifact login --tool pip --domain tackle-codeartifact --repository tackle-codeartifact-pypi --domain-owner 730998372749 --region us-west-2 && aws ecr --profile mgmt-appeng get-login-password | docker login --username AWS --password-stdin 730998372749.dkr.ecr.us-west-2.amazonaws.com)'
 FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT='true' # opt out of sending Azure Functions Core CLI usage
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=2'
@@ -133,3 +135,8 @@ source $ZSH/oh-my-zsh.sh
 # source /usr/local/share/chruby/chruby.sh
 
 [ -f "/Users/david.baek/.ghcup/env" ] && source "/Users/david.baek/.ghcup/env" # ghcup-env
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

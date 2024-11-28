@@ -29,9 +29,9 @@
 (set-face-attribute 'default nil :height 180)
 
 
-(setenv "GOPATH" "/Users/davidbaek/go")
-;; (setenv "PATH" "/Users/davidbaek/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
-(setenv "PATH" "/Users/davidbaek/.cabal/bin:/Users/davidbaek/.ghcup/bin:/Users/davidbaek/google-cloud-sdk/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/davidbaek/go/bin:/Users/davidbaek/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/davidbaek/go/bin:/usr/local/go/bin")
+(setenv "GOPATH" "/Users/david.baek/go")
+;; (setenv "PATH" "/Users/david.baek/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin")
+(setenv "PATH" "/Users/david.baek/.cabal/bin:/Users/david.baek/.ghcup/bin:/Users/david.baek/google-cloud-sdk/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/david.baek/go/bin:/Users/david.baek/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/david.baek/go/bin:/usr/local/go/bin")
 
 ;; Initialize package sources
 (require 'package)
@@ -61,7 +61,7 @@
 (global-display-line-numbers-mode t)
 
 ;; Disable line numbers for org mode
-(add-hook 'org-mode-hook (lambda () (linum-mode 0)))
+(add-hook 'org-mode-hook (lambda () (display-line-numbers-mode 0)))
 
 ;; Allow for multiple cursors
 (use-package multiple-cursors)
@@ -75,7 +75,7 @@
  '(markdown-command "/usr/local/bin/pandoc")
  '(org-agenda-files '("~/Desktop/life/trips.org"))
  '(package-selected-packages
-   '(python-black rustic rust-mode tern xref-js2 spacemacs-theme js2-refactor syslog-mode anzua rjsx-mode web-mode tide lsp-tailwindcss ox-hugo js2-mode typescript-mode org-jira haskell-mode avy anzu flycheck-golangci-lint flycheck org-roam ivy-prescient dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
+   '(editorconfig prettier-js zuul jtsx todotxt dockerfile-mode tree-sitter-langs tree-sitter dotenv-mode python-black rustic rust-mode tern xref-js2 spacemacs-theme js2-refactor syslog-mode anzua rjsx-mode web-mode tide lsp-tailwindcss ox-hugo js2-mode typescript-mode org-jira haskell-mode avy anzu flycheck-golangci-lint flycheck org-roam ivy-prescient dired-subtree company-terraform grip-mode exec-path-from-shell pandoc markdownfmt markdown-preview-mode impatient-mode jedi lsp-python-ms json-mode org-tree-slide magit-gh-pulls terraform-mode graphql-mode org-superstar yaml-mode move-text org-bullets multiple-cursors company yasnippet go-mode zenburn-theme which-key use-package rainbow-delimiters magit lsp-ui lsp-ivy helpful doom-themes doom-modeline counsel-projectile command-log-mode all-the-icons-ivy-rich)))
 ;; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
 (setq org-hide-emphasis-markers t)
 (font-lock-add-keywords 'org-mode
@@ -202,16 +202,17 @@
   :commands (lsp lsp-deferred)
   :init
   (setq lsp-keymap-prefix "C-c l")
+  :ensure t
+  :hook (go-mode . lsp-deferred)
   :config
   (lsp-enable-which-key-integration t))
 
+;; Go - lsp-mode
 ;; Set up before-save hooks to format buffer and add/delete imports.
-;; Make sure you don't have other gofmt/goimports hooks enabled.
 (defun lsp-go-install-save-hooks ()
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-
 
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.opt\\'"))
@@ -224,11 +225,6 @@
 (setq company-minimum-prefix-length 1)
 
 (setq gofmt-command "goimports")
-;; Set up before-save hooks to format buffer and add/delete imports.
-;; Make sure you don't have other gofmt/goimports hooks enabled.
-(defun lsp-go-install-save-hooks ()
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
 
 (add-hook 'go-mode-hook
           (lambda ()
@@ -244,13 +240,6 @@
             (define-key go-mode-map "[" 'electric-pair)
             (define-key go-mode-map "{" 'electric-pair)))
 
-(add-hook 'js2-mode-hook
-          (lambda ()
-            (define-key go-mode-map "\"" 'electric-pair)
-            (define-key go-mode-map "\'" 'electric-pair)
-            (define-key go-mode-map "(" 'electric-pair)
-            (define-key go-mode-map "[" 'electric-pair)
-            (define-key go-mode-map "{" 'electric-pair)))
 ;; Start LSP Mode and YASnippet mode
 (add-hook 'go-mode-hook #'lsp-deferred)
 (yas-global-mode 1)
@@ -260,6 +249,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#3F3F3F" :foreground "#DCDCCC" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 160 :width normal :foundry "nil" :family "Menlo"))))
  '(fixed-pitch ((t (:family "Monospace"))))
  '(org-document-title ((t (:inherit default :font "Lucida Grande" :height 2.0 :underline nil))))
  '(org-level-1 ((t (:inherit default :font "Lucida Grande" :height 1.5))))
@@ -573,26 +563,36 @@ Version 2016-04-04"
 (global-set-key [remap query-replace] 'anzu-query-replace)
 (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
 
-;; JavaScript IDE setup
-(require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-
-;; Better imenu
-(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
-
-(require 'js2-refactor)
-(require 'xref-js2)
-
-(add-hook 'js2-mode-hook #'js2-refactor-mode)
-(js2r-add-keybindings-with-prefix "C-c C-r")
-(define-key js2-mode-map (kbd "C-k") #'js2r-kill)
-
-;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
-;; unbind it.
-(define-key js-mode-map (kbd "M-.") nil)
-
-(add-hook 'js2-mode-hook (lambda ()
-  (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
-(define-key js2-mode-map (kbd "C-k") #'js2r-kill)
-
 (setq lsp-go-use-gofumpt t)
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
+
+;; dotenv-mode
+(add-to-list 'auto-mode-alist '("\\.env\\'" . dotenv-mode))
+
+(setq treesit-language-source-alist
+      '((typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")))
+
+(use-package tree-sitter
+  :config
+  (use-package tree-sitter-langs
+    :config
+    (add-to-list 'tree-sitter-major-mode-language-alist '(dockerfile-mode . dockerfile))))
+
+(use-package typescript-mode
+  :ensure t
+  :mode "\\.tsx?\\'"
+  :hook (typescript-mode . lsp-deferred))
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+(setq-default js-indent-level 2)
+
+(provide 'init)
+
