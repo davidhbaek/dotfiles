@@ -43,10 +43,12 @@
 
 ;; Enhanced minibuffer documentation
 (use-package ivy-rich
+  :defer
   :init (ivy-rich-mode 1))
 
 ;; Icons in ivy
 (use-package all-the-icons-ivy-rich
+  :defer
   :init (all-the-icons-ivy-rich-mode 1))
 
 ;; Better help system

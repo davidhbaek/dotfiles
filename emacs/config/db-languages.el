@@ -51,6 +51,7 @@
 
 ;; TypeScript Interactive Development Environment
 (use-package tide
+  :defer
   :ensure t
   :after (typescript-mode company flycheck)
   :hook ((typescript-mode . tide-setup)
@@ -58,12 +59,14 @@
          (before-save . tide-format-before-save)))
 
 ;; JSX support
-(use-package jtsx 
+(use-package jtsx
+  :defer
   :mode "\\.jsx?\\'"
   :hook (jtsx-mode . lsp-deferred))
 
 ;; Python configuration
 (use-package jedi
+  :defer
   :ensure t
   :hook (python-mode . jedi:setup)
   :init
@@ -80,6 +83,7 @@
 
 ;; Additional Python enhancements
 (use-package python-mode
+  :defer
   :ensure t
   :hook (python-mode . lsp-deferred))
 

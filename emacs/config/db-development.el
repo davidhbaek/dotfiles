@@ -17,6 +17,7 @@
 
 ;; Project management
 (use-package projectile
+  :defer
   :diminish projectile-mode
   :config (projectile-mode)
   :custom ((projectile-completion-system 'ivy))  ; Use ivy for completion
@@ -28,6 +29,7 @@
 
 ;; Git integration
 (use-package magit
+  :defer
   :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
@@ -54,6 +56,7 @@
 ;; LSP (Language Server Protocol) support
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
+  :defer
   :init
   (setq lsp-keymap-prefix "C-c l")  ; Set LSP keybinding prefix
   :ensure t
