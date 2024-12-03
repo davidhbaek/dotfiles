@@ -104,16 +104,57 @@
   :config
   (editorconfig-mode 1))
 
-;; Syntax highlighting improvements
+;; Modern TypeScript/TSX configuration for Emacs 29
+;; This uses the built-in tree-sitter support for superior syntax highlighting
+
+;; Define the grammar sources for TypeScript/TSX
+;; This tells Emacs where to download the necessary parsers
 (setq treesit-language-source-alist
       '((typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")))
 
-(use-package tree-sitter
-  :config
-  (use-package tree-sitter-langs
-    :config
-    (add-to-list 'tree-sitter-major-mode-language-alist '(dockerfile-mode . dockerfile))))
+;; Set up file associations for TypeScript and TSX files
+;; This ensures .tsx files open in tsx-ts-mode and .ts files in typescript-ts-mode
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+
+;; Configure the typescript tree-sitter mode
+(with-eval-after-load 'typescript-ts-mode
+  ;; Enhance syntax highlighting for JSX/TSX elements
+  (setq typescript-ts-mode-indent-offset 2)
+  
+  ;; Set up custom faces for different TSX elements
+  (custom-set-faces
+   ;; Make component names stand out
+   '(typescript-ts-jsx-tag-face ((t :inherit font-lock-function-name-face :weight bold)))
+   ;; Style attributes distinctly
+   '(typescript-ts-jsx-attribute-face ((t :inherit font-lock-constant-face)))
+   ;; Style JSX text content
+   '(typescript-ts-jsx-text-face ((t :inherit default))))
+
+  ;; Add development tools to TSX editing
+  (add-hook 'tsx-ts-mode-hook
+            (lambda ()
+              ;; Enable LSP support
+              (lsp-deferred)
+              ;; Show matching parentheses
+              (show-paren-mode 1)
+              ;; Enable automatic bracket/quote pairing
+              (electric-pair-mode 1)
+              ;; Add colorful parentheses
+              (rainbow-delimiters-mode 1))))
+
+;; LSP-specific settings for TypeScript/TSX
+(with-eval-after-load 'lsp-mode
+  (setq lsp-typescript-preferences-import-module-specifier "relative"
+        lsp-typescript-preferences-quote-style "single"
+        lsp-typescript-format-enable t
+        lsp-typescript-format-insert-space-after-comma t
+        lsp-typescript-format-insert-space-after-semicolon-in-for-statements t
+        ;; Enable additional TypeScript LSP features
+        lsp-typescript-suggest-complete-function-calls t
+        lsp-typescript-implementations-code-lens-enabled t
+        lsp-typescript-references-code-lens-enabled t))
 
 (provide 'db-development)
 ;;; db-development.el ends here

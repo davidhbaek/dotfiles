@@ -13,7 +13,12 @@
 ;; Programming Languages
 ;; ====================================
 
-;; Go configuration
+
+
+;; ====================================
+;; Go Configuration
+;; ====================================
+
 (setq lsp-enable-file-watchers nil)
 (setq gofmt-command "goimports")
 (setq lsp-go-use-gofumpt t)
@@ -42,7 +47,11 @@
             (define-key go-mode-map "[" 'electric-pair)
             (define-key go-mode-map "{" 'electric-pair)))
 
+
+;; ====================================
 ;; Python Configuration
+;; ====================================
+
 ;; We're using LSP mode for consistency with your other language configurations
 (use-package python-mode
   :ensure t
@@ -76,23 +85,64 @@
               (add-hook 'before-save-hook #'lsp-format-buffer t t)
               (add-hook 'before-save-hook #'lsp-organize-imports t t))))
 
-;; General JavaScript/TypeScript settings
-(setq-default js-indent-level 2)
-(setq-default indent-tabs-mode nil)
+; =======================================
+;; TypeScript and JavaScript Configuration
+;; =======================================
 
-;; TypeScript configuration with Tide
-(use-package tide
+;; Core TypeScript settings
+(use-package typescript-mode
   :ensure t
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)
-         (before-save . tide-format-before-save))
-  :mode ("\\.ts\\'" . typescript-mode)
+  :mode "\\.ts\\'"
   :config
-  (setq tide-completion-show-source t
-        tide-always-show-documentation t))
+  ;; Basic indentation and formatting
+  (setq typescript-indent-level 2)
+  (setq typescript-expr-indent-offset 2)
+  ;; Enable JSX parsing in TypeScript
+  (setq typescript-enabled-frameworks '(typescript jsx))
+  ;; Custom indentation rules
+  (setq typescript-indent-switch-clauses t))
 
-;; JavaScript configuration with js2-mode
+;; TypeScript LSP configurations
+(with-eval-after-load 'lsp-mode
+  ;; Import and formatting preferences
+  (setq lsp-typescript-preferences-import-module-specifier "relative"
+        lsp-typescript-preferences-quote-style "single"
+        lsp-typescript-format-enable t
+        lsp-typescript-format-insert-space-after-comma t
+        lsp-typescript-format-insert-space-after-semicolon-in-for-statements t
+        lsp-typescript-surveys-enabled nil)
+  
+  ;; Enhanced TypeScript features
+  (setq lsp-typescript-suggest-complete-function-calls t
+        lsp-typescript-implementations-code-lens-enabled t
+        lsp-typescript-references-code-lens-enabled t
+        lsp-typescript-organize-imports-on-save t)
+  
+  ;; Performance optimizations for TypeScript
+  (setq lsp-typescript-max-ts-server-memory 3072
+        lsp-file-watch-threshold 5000))
+
+;; JSX/TSX configuration
+(use-package jtsx
+  :ensure t
+  :mode (("\\.jsx\\'" . jtsx-jsx-mode)
+         ("\\.tsx\\'" . jtsx-tsx-mode))
+  :init
+  (add-hook 'jtsx-mode-hook #'jtsx-setup-buffer)
+  :config
+  (setq jtsx-indent-level 2
+        jtsx-jsx-syntax-highlighting-mode t
+        jtsx-enable-jsx-electric-closing-element t
+        jtsx-enable-electric-keys t)
+  
+  ;; Enhance JSX component visibility
+  (face-spec-set 'jtsx-jsx-component-face
+                 '((t :inherit font-lock-function-name-face :weight bold)))
+  
+  ;; Improved tag matching
+  (setq jtsx-match-tag-style 'highlight))
+
+;; JavaScript configuration
 (use-package js2-mode
   :ensure t
   :mode "\\.js\\'"
@@ -107,17 +157,10 @@
               (setq js2-global-externs '("event" "api" "axios"))
               (setq js2-include-node-externs t))))
 
-;; JSX/TSX configuration with JTSX
-(use-package jtsx
-  :ensure t
-  :mode (("\\.jsx\\'" . jtsx-jsx-mode)
-         ("\\.tsx\\'" . jtsx-tsx-mode))
-  :init
-  (add-hook 'jtsx-mode-hook #'jtsx-setup-buffer)
-  :hook ((jtsx-jsx-mode . lsp-deferred)
-         (jtsx-tsx-mode . lsp-deferred))
-  :config
- (setq jtsx-indent-level 2))
+;; Global JavaScript/TypeScript settings
+(setq-default js-indent-level 2
+              indent-tabs-mode nil)
+
 
 (provide 'db-languages)
 ;;; db-languages.el ends here

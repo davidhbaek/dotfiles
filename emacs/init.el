@@ -24,6 +24,8 @@
 (require 'db-functions)
 (require 'db-keybindings)
 (require 'db-env)
+(require 'db-jira)
+(require 'db-terminal)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -32,7 +34,7 @@
  ;; If there is more than one, they won't work right.
  '(markdown-command "/usr/local/bin/pandoc")
  '(package-selected-packages
-   '(esup gptel zuul zenburn-theme yasnippet yaml-mode which-key typescript-mode tree-sitter-langs todotxt tide rjsx-mode rainbow-delimiters python-mode python-black prettier-js ox-hugo org-tree-slide org-superstar org-roam org-bullets multiple-cursors move-text magit lsp-ui jtsx json-mode jedi ivy-prescient helpful graphql-mode go-mode flycheck-golangci-lint exec-path-from-shell editorconfig dotenv-mode doom-themes doom-modeline dockerfile-mode dired-subtree counsel-projectile company command-log-mode anzu all-the-icons-ivy-rich)))
+   '(lsp-pyright org-roam-ui org-jira esup gptel zuul zenburn-theme yasnippet yaml-mode which-key typescript-mode tree-sitter-langs todotxt tide rjsx-mode rainbow-delimiters python-mode python-black prettier-js ox-hugo org-tree-slide org-superstar org-roam org-bullets multiple-cursors move-text magit lsp-ui jtsx json-mode jedi ivy-prescient helpful graphql-mode go-mode flycheck-golangci-lint exec-path-from-shell editorconfig dotenv-mode doom-themes doom-modeline dockerfile-mode dired-subtree counsel-projectile company command-log-mode anzu all-the-icons-ivy-rich)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
