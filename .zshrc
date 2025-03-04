@@ -116,6 +116,10 @@ alias python="python3"
 # or awslocal
 alias awsl="awslocal"
 
+# run the watchexec commands for Go development
+alias gob="$HOME/bin/gob.sh"
+
+
 # alias for Tackle to set AWS_PROFILE, login to code artifact to pull libraries, and log in to SSO
 alias start-day='(export AWS_PROFILE=mgmt-appeng && aws sso login && aws codeartifact login --tool pip --domain tackle-codeartifact --repository tackle-codeartifact-pypi --domain-owner 730998372749 --region us-west-2 && aws ecr --profile mgmt-appeng get-login-password | docker login --username AWS --password-stdin 730998372749.dkr.ecr.us-west-2.amazonaws.com)'
 FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT='true' # opt out of sending Azure Functions Core CLI usage
