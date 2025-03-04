@@ -103,5 +103,41 @@
   (org-tree-slide-header t)
   (org-tree-slide-breadcrumbs " // "))
 
+(use-package org-download
+  :ensure t
+  :after org
+  :config
+  (setq org-download-method 'directory)
+  (setq org-download-image-dir "~/org-roam/images")
+  (setq org-download-heading-lvl nil))
+
+ ;; Customize how screenshots are named
+  ;; This format gives you: screenshot-2024-12-23-10-30-45.png
+  (setq org-download-screenshot-file
+        (expand-file-name "screenshot-%Y-%m-%d-%H-%M-%S.png" "/tmp"))
+  
+  ;; Add timestamps to image names to prevent overwrites
+  ;; This ensures each image gets a unique name
+(setq org-download-timestamp "%Y-%m-%d-%H-%M-%S")
+
+  ;; Set up convenient keybindings
+  ;; These make it quick to add images to your documents
+  (global-set-key (kbd "C-c s") 'org-download-screenshot)  ; Take and insert screenshot
+  (global-set-key (kbd "C-c y") 'org-download-yank)       ; Insert image from clipboard
+  
+  ;; Optional: Customize the annotation that gets inserted with the image
+  ;; This affects how the image link appears in your org file
+  (setq org-download-annotate-function
+        (lambda (link) 
+          (format "#+CAPTION: %s\n" 
+                  (file-name-nondirectory link))))
+  
+  ;; Optional: Set up drag-and-drop support
+  ;; This lets you drag image files directly into Emacs
+  (add-hook 'dired-mode-hook 'org-download-enable)
+  
+  ;; Optional: If you want to automatically scale large images
+  (setq org-image-actual-width '(300))  ; Limit image display width to 300 pixels
+
 (provide 'db-org)
 ;;; db-org.el ends here
