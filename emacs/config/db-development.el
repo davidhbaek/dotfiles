@@ -20,6 +20,13 @@
   :defer
   :diminish projectile-mode
   :config (projectile-mode)
+  (setq projectile-project-search-path '("~/Desktop/repos"))
+  ;; Enable project indexing for faster searches
+  (setq projectile-indexing-method 'alien)
+  ;; Enable caching for better performance with many projects
+  (setq projectile-enable-caching t)
+  ;; Auto-discover projects when Emacs starts
+  (projectile-discover-projects-in-search-path)
   :custom ((projectile-completion-system 'ivy))  ; Use ivy for completion
   :bind-keymap ("C-c p" . projectile-command-map))
 
