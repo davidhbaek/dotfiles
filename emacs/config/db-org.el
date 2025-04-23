@@ -139,5 +139,40 @@
   ;; Optional: If you want to automatically scale large images
   (setq org-image-actual-width '(300))  ; Limit image display width to 300 pixels
 
+;; Use the faster SQLite WAL (Write-Ahead Logging) mode
+(setq org-roam-db-extra-config '((foreign_keys . t)
+                                 (journal_mode . wal)
+                                 (synchronous . normal)))
+
+;; Adjust database update behavior
+(setq org-roam-db-update-method 'immediate)
+(setq org-roam-db-node-include-function
+      (lambda () (not (member "ARCHIVE" (org-get-tags)))))
+
+;; Temporarily increase GC threshold during file operations
+(defun my/set-gc-high ()
+  "Set garbage collection threshold high for better performance."
+  (setq gc-cons-threshold 100000000)) ;; 100MB
+
+(defun my/set-gc-normal ()
+  "Reset garbage collection threshold to normal."
+  (setq gc-cons-threshold 800000)) ;; 800KB
+
+;; Raise threshold during file operations
+(add-hook 'find-file-hook #'my/set-gc-high)
+(add-hook 'after-save-hook #'my/set-gc-normal)
+
+
+(defun profile-org-roam-capture ()
+  "Profile org-roam node creation."
+  (interactive)
+  (profiler-start 'cpu)
+  (message "Profiling started, create your node now...")
+  (run-with-timer 10 nil
+                  (lambda ()
+                    (profiler-stop)
+                    (profiler-report)
+                    (message "Profiling complete. Check the report."))))
+
 (provide 'db-org)
 ;;; db-org.el ends here

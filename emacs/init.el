@@ -26,6 +26,7 @@
 (require 'db-env)
 (require 'db-jira)
 (require 'db-terminal)
+(require 'db-fonts)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -34,7 +35,7 @@
  ;; If there is more than one, they won't work right.
  '(markdown-command "/usr/local/bin/pandoc")
  '(package-selected-packages
-   '(lsp-pyright org-roam-ui org-jira esup gptel zuul zenburn-theme yasnippet yaml-mode which-key typescript-mode tree-sitter-langs todotxt tide rjsx-mode rainbow-delimiters python-mode python-black prettier-js ox-hugo org-tree-slide org-superstar org-roam org-bullets multiple-cursors move-text magit lsp-ui jtsx json-mode jedi ivy-prescient helpful graphql-mode go-mode flycheck-golangci-lint exec-path-from-shell editorconfig dotenv-mode doom-themes doom-modeline dockerfile-mode dired-subtree counsel-projectile company command-log-mode anzu all-the-icons-ivy-rich)))
+   '(lua-mode terraform-mode python-isort web-mode markdown-ts-mode 0blayout 0x0 markdown-mode markdown-preview-eww markdown-preview-mode grip-mode treesit-auto lsp-pyright org-roam-ui org-jira esup gptel zuul zenburn-theme yasnippet yaml-mode which-key typescript-mode tree-sitter-langs todotxt tide rjsx-mode rainbow-delimiters python-mode python-black prettier-js ox-hugo org-tree-slide org-superstar org-roam org-bullets multiple-cursors move-text magit lsp-ui jtsx json-mode jedi ivy-prescient helpful graphql-mode go-mode flycheck-golangci-lint exec-path-from-shell editorconfig dotenv-mode doom-themes doom-modeline dockerfile-mode dired-subtree counsel-projectile company command-log-mode anzu all-the-icons-ivy-rich)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -52,7 +53,22 @@
  '(org-level-6 ((t (:inherit default :font "Lucida Grande"))))
  '(org-level-7 ((t (:inherit default :font "Lucida Grande"))))
  '(org-level-8 ((t (:inherit default :font "Lucida Grande"))))
+ '(tree-sitter-hl-face:jsx-attribute ((t :inherit font-lock-constant-face)))
+ '(tree-sitter-hl-face:jsx-element ((t :inherit font-lock-function-name-face :weight bold)))
+ '(tree-sitter-hl-face:jsx-expression ((t :inherit font-lock-variable-name-face)))
+ '(tree-sitter-hl-face:jsx-text ((t :inherit default)))
+ '(typescript-ts-jsx-attribute-face ((t :inherit font-lock-constant-face)))
+ '(typescript-ts-jsx-tag-face ((t :inherit font-lock-function-name-face :weight bold)))
+ '(typescript-ts-jsx-text-face ((t :inherit default)))
  '(variable-pitch ((t (:family "DejaVu Sans Mono")))))
+
+;; Set up the tree-sitter load path
+(setq treesit-extra-load-path
+      (list (expand-file-name "~/.emacs.d/tree-sitter/tree-sitter-javascript")))
+
+;; Enable tree-sitter for JavaScript mode
+(setq major-mode-remap-alist
+      '((js-mode . js-ts-mode)))
 
 (provide 'init)
 ;;; init.el ends here

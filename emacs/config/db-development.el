@@ -34,6 +34,16 @@
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
+
+;; Add org-roam directory to Projectile's globally ignored directories
+(with-eval-after-load 'org-roam
+(with-eval-after-load 'projectile
+  (add-to-list 'projectile-globally-ignored-directories 
+               (file-name-nondirectory (directory-file-name org-roam-directory))))
+  
+  ;; Rebuild Projectile's cache to apply the changes
+  (projectile-invalidate-cache nil))
+
 ;; Git integration
 (use-package magit
   :defer
@@ -158,10 +168,58 @@
         lsp-typescript-format-enable t
         lsp-typescript-format-insert-space-after-comma t
         lsp-typescript-format-insert-space-after-semicolon-in-for-statements t
-        ;; Enable additional TypeScript LSP features
+        ;; ADD THESE LINES:
+        lsp-typescript-format-indent-size 2
+        lsp-typescript-format-convert-tabs-to-spaces t
+        ;; Keep your existing settings below:
         lsp-typescript-suggest-complete-function-calls t
         lsp-typescript-implementations-code-lens-enabled t
         lsp-typescript-references-code-lens-enabled t))
 
+;; Minimal indentation settings for React/TypeScript code
+(with-eval-after-load 'typescript-ts-mode
+  (setq typescript-ts-mode-indent-offset 2)
+  (setq tsx-ts-mode-indent-offset 2)
+
+  ;; Keep your existing faces settings
+  (custom-set-faces
+   '(typescript-ts-jsx-tag-face ((t :inherit font-lock-function-name-face :weight bold)))
+   '(typescript-ts-jsx-attribute-face ((t :inherit font-lock-constant-face)))
+   '(typescript-ts-jsx-text-face ((t :inherit default))))
+
+  ;; Update your tsx-ts-mode-hook with format settings
+  (add-hook 'tsx-ts-mode-hook
+            (lambda ()
+              (lsp-deferred)
+              (show-paren-mode 1)
+              (electric-pair-mode 1)
+              (rainbow-delimiters-mode 1)
+              ;; Make sure format-on-save is using the right settings
+              (setq-local lsp-typescript-format-indent-size 2)
+              (add-hook 'before-save-hook #'lsp-format-buffer nil t))))
+
+
+;; ADD this new section to ensure indentation is set correctly
+(add-hook 'tsx-ts-mode-hook
+          (lambda ()
+            ;; Explicitly set indentation each time a TSX file is loaded
+            (setq-local indent-tabs-mode nil)
+            (setq-local typescript-ts-mode-indent-offset 2)
+            (setq-local tsx-ts-mode-indent-offset 2)
+            (when (fboundp 'lsp-workspace-folders-add)
+              (lsp-workspace-folders-add (project-root (project-current))))))
+
+;; Ensure web-mode uses the same indentation style
+(use-package web-mode
+  :ensure t
+  :mode (("\\.jsx\\'" . web-mode))
+  :config
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2))
+
+;; Disable LSP formatting for TypeScript/TSX files
+(with-eval-after-load 'lsp-mode
+  (setq-default lsp-typescript-format-enable nil))
 (provide 'db-development)
 ;;; db-development.el ends here
