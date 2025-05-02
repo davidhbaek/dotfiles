@@ -14,7 +14,7 @@
 (defun db/org-mode-setup()
   "Configure basic org-mode settings and appearance."
   (org-indent-mode)              ; Enable indentation
-  (variable-pitch-mode 1)        ; Use variable-pitch fonts
+  ;; (variable-pitch-mode 1)        ; Use variable-pitch fonts (commented out to use fixed-width JetBrains Mono)
   (auto-fill-mode 0)             ; Disable auto-fill
   (visual-line-mode 1))          ; Enable visual line mode
 
@@ -24,23 +24,34 @@
   :config
   (setq org-ellipsis " ▾")           ; Use this symbol for collapsed sections
   (setq org-hide-emphasis-markers t)  ; Hide markup symbols
-  (setq org-src-tab-acts-natively t)) ; Better tab behavior in source blocks
+  (setq org-src-tab-acts-natively t)  ; Better tab behavior in source blocks
+  ;; Force org-mode to use JetBrains Mono
+  (custom-set-faces
+   '(org-default ((t (:family "JetBrains Mono")))))
+  (set-face-attribute 'fixed-pitch nil :family "JetBrains Mono"))
 
-;; Custom bullet appearance for lists
-(font-lock-add-keywords 'org-mode
-                       '(("^ *\\([-]\\) "
-                          (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+;; Custom bullet appearance for lists - replaced with org-superstar
 
 ;; Configure org todo states
 (setq org-todo-keywords
       '((sequence "TODO" "IN-PROGRESS" "QA" "|" "DONE")))
 
+;; Make all todo keywords same size as regular text
+(setq org-level-faces nil)
+(setq org-todo-keyword-faces
+      '(("TODO" . (:inherit default :weight bold :foreground "firebrick"))
+        ("IN-PROGRESS" . (:inherit default :weight bold :foreground "orange"))
+        ("QA" . (:inherit default :weight bold :foreground "royal blue"))
+        ("DONE" . (:inherit default :weight bold :foreground "forest green"))))
+
 ;; Enable inline images by default
 (setq org-startup-with-inline-images t)
 
-;; Org face configuration for better typography
-(let* ((variable-tuple
-        (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+;; Org face configuration using JetBrains Mono
+(let* ((fixed-pitch '(:font "JetBrains Mono"))
+       (variable-tuple
+        (cond ((x-list-fonts "JetBrains Mono") '(:font "JetBrains Mono"))
+              ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
               ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
               ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
               ((x-list-fonts "Verdana")         '(:font "Verdana"))
@@ -57,7 +68,15 @@
    `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.1))))
    `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
    `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.5))))
-   `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+   `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))
+   ;; Additional faces to ensure fixed-pitch (JetBrains Mono) for code and text
+   `(org-block ((t (:inherit fixed-pitch))))
+   `(org-code ((t (:inherit (shadow fixed-pitch)))))
+   `(org-table ((t (:inherit fixed-pitch))))
+   `(org-verbatim ((t (:inherit (shadow fixed-pitch)))))
+   `(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   `(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   `(org-checkbox ((t (:inherit fixed-pitch))))))
 
 ;; Better bullet points in org-mode
 (use-package org-superstar
@@ -65,7 +84,12 @@
   :hook (org-mode . org-superstar-mode)
   :custom
   (org-superstar-remove-leading-stars t)
-  (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●")))
+  (org-superstar-headline-bullets-list '("◉" "○" "●" "○" "●" "○" "●"))
+  ;; Change unordered list bullets to real bullets instead of dashes
+  (org-superstar-prettify-item-bullets t)
+  (org-superstar-item-bullet-alist '(("*" . "•")
+                                     ("-" . "•")
+                                     ("+" . "•"))))
 
 ;; Org-roam configuration for note-taking
 (use-package org-roam
