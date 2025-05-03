@@ -44,13 +44,15 @@
   ;; Rebuild Projectile's cache to apply the changes
   (projectile-invalidate-cache nil))
 
-;; Git integration
 (use-package magit
   :defer
   :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+(use-package forge
+  :after magit
+  :ensure t)
 ;; GitHub pull request integration
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
