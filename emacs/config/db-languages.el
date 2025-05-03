@@ -85,6 +85,28 @@
               (add-hook 'before-save-hook #'lsp-format-buffer t t)
               (add-hook 'before-save-hook #'lsp-organize-imports t t))))
 
+(use-package python-black
+  :ensure t
+  :after python
+  :hook (python-mode . python-black-on-save-mode))
+
+(use-package python-isort
+  :ensure t
+  :after python
+  :hook (python-mode . python-isort-on-save-mode))
+
+(use-package smartparens
+  :ensure t
+  :hook (prog-mode . smartparens-mode)
+  :config
+  (require 'smartparens-config)
+  ;; Python-specific configuration
+  (sp-local-pair 'python-mode "'" "'")
+  (sp-local-pair 'python-mode "\"" "\"")
+  (sp-local-pair 'python-mode "(" ")")
+  (sp-local-pair 'python-mode "[" "]")
+  (sp-local-pair 'python-mode "{" "}"))
+
 ; =======================================
 ;; TypeScript and JavaScript Configuration
 ;; =======================================
