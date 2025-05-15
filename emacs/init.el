@@ -34,6 +34,7 @@
 (require 'db-copilot)
 (require 'db-fonts)
 (require 'db-gptel)
+(require 'db-mcp)
 
 ;; Set up the tree-sitter load path
 (setq treesit-extra-load-path
