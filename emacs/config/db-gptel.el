@@ -1,5 +1,5 @@
 ;; This file is part of the Emacs configuration for using GPTel with tools
-(straight-use-package 'gptel)
+;; Using standard package.el
 
 (use-package gptel
   :config
@@ -14,6 +14,7 @@
   :bind (("C-c g s" . gptel-send)   ;; Send query
          ("C-c g c" . gptel)))     ;; Open dedicated chat buffer
 
-(require 'gptel-integrations)
+;; gptel-integrations doesn't exist in standard gptel package
+;; (require 'gptel-integrations)
 
 (provide 'db-gptel)

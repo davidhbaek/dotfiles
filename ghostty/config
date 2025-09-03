@@ -1,2 +1,3 @@
 theme = zenburned
 keybind = global:alt+space=toggle_visibility
+keybind = shift+enter=text:\n

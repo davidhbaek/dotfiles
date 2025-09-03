@@ -1,6 +1,8 @@
-;; If you use straight.el
-(straight-use-package '(mcp :type git :host github :repo "lizqwerscott/mcp.el"))
-(use-package mcp)
+;; Add mcp.el to load path (manually installed from GitHub)
+(add-to-list 'load-path "~/.emacs.d/packages/mcp.el")
+
+;; Now we can require and use it
+(require 'mcp)
 (require 'mcp-hub)
 
 ;; Configure servers with both filesystem and websearch

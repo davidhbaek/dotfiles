@@ -117,7 +117,7 @@ alias python="python3"
 alias awsl="awslocal"
 
 # run the watchexec commands for Go development
-alias gob="$HOME/bin/gob.sh"
+alias gob="$HOME/bin/gob"
 
 
 # alias for Tackle to set AWS_PROFILE, login to code artifact to pull libraries, and log in to SSO
