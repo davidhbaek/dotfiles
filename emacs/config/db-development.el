@@ -34,15 +34,13 @@
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
-
 ;; Add org-roam directory to Projectile's globally ignored directories
 (with-eval-after-load 'org-roam
-(with-eval-after-load 'projectile
-  (add-to-list 'projectile-globally-ignored-directories 
-               (file-name-nondirectory (directory-file-name org-roam-directory))))
-  
-  ;; Rebuild Projectile's cache to apply the changes
-  (projectile-invalidate-cache nil))
+  (with-eval-after-load 'projectile
+    (add-to-list 'projectile-globally-ignored-directories 
+                 (file-name-nondirectory (directory-file-name org-roam-directory)))
+    ;; Rebuild Projectile's cache to apply the changes
+    (projectile-invalidate-cache nil)))
 
 (use-package magit
   :defer
@@ -53,6 +51,7 @@
 (use-package forge
   :after magit
   :ensure t)
+
 ;; GitHub pull request integration
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
@@ -88,17 +87,27 @@
 ;; Additional LSP configuration for file watching
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.opt\\'")
-  (add-to-list 'lsp-file-watch-ignored-files "[/\\\\]\\.go$"))
+  (add-to-list 'lsp-file-watch-ignored-files "[/\\\\]\\.go$")
+  (setq lsp-go-use-gofumpt nil)  ; Don't use external formatters that might call golangci-lint
+  (setq lsp-go-analyses nil)     ; Disable external analysis tools
+  (setq lsp-go-build-flags [])   ; Clear any build flags that might invoke golangci-lint
+  )
 
 ;; Syntax checking
 (use-package flycheck
   :ensure t
-  :init (global-flycheck-mode))
-
-(use-package flycheck-golangci-lint
-  :ensure t
-  :hook (go-mode . flycheck-golangci-lint-setup))
-
+  :init (global-flycheck-mode)
+  :config
+  ;; Disable the problematic golangci-lint checker
+  (setq flycheck-disabled-checkers '(golangci-lint))
+  
+  ;; Configure Go with reliable built-in tools
+  (add-hook 'go-mode-hook
+            (lambda ()
+              ;; Use these reliable checkers instead
+              (setq flycheck-checkers '(go-build go-test go-vet))
+              ;; Enable gofmt on save
+              (add-hook 'before-save-hook 'gofmt-before-save nil 'local))))
 ;; Code completion
 (use-package company
   :ensure t
@@ -163,55 +172,7 @@
               ;; Add colorful parentheses
               (rainbow-delimiters-mode 1))))
 
-;; LSP-specific settings for TypeScript/TSX
-(with-eval-after-load 'lsp-mode
-  (setq lsp-typescript-preferences-import-module-specifier "relative"
-        lsp-typescript-preferences-quote-style "single"
-        lsp-typescript-format-enable t
-        lsp-typescript-format-insert-space-after-comma t
-        lsp-typescript-format-insert-space-after-semicolon-in-for-statements t
-        ;; ADD THESE LINES:
-        lsp-typescript-format-indent-size 2
-        lsp-typescript-format-convert-tabs-to-spaces t
-        ;; Keep your existing settings below:
-        lsp-typescript-suggest-complete-function-calls t
-        lsp-typescript-implementations-code-lens-enabled t
-        lsp-typescript-references-code-lens-enabled t))
-
-;; Minimal indentation settings for React/TypeScript code
-(with-eval-after-load 'typescript-ts-mode
-  (setq typescript-ts-mode-indent-offset 2)
-  (setq tsx-ts-mode-indent-offset 2)
-
-  ;; Keep your existing faces settings
-  (custom-set-faces
-   '(typescript-ts-jsx-tag-face ((t :inherit font-lock-function-name-face :weight bold)))
-   '(typescript-ts-jsx-attribute-face ((t :inherit font-lock-constant-face)))
-   '(typescript-ts-jsx-text-face ((t :inherit default))))
-
-  ;; Update your tsx-ts-mode-hook with format settings
-  (add-hook 'tsx-ts-mode-hook
-            (lambda ()
-              (lsp-deferred)
-              (show-paren-mode 1)
-              (electric-pair-mode 1)
-              (rainbow-delimiters-mode 1)
-              ;; Make sure format-on-save is using the right settings
-              (setq-local lsp-typescript-format-indent-size 2)
-              (add-hook 'before-save-hook #'lsp-format-buffer nil t))))
-
-
-;; ADD this new section to ensure indentation is set correctly
-(add-hook 'tsx-ts-mode-hook
-          (lambda ()
-            ;; Explicitly set indentation each time a TSX file is loaded
-            (setq-local indent-tabs-mode nil)
-            (setq-local typescript-ts-mode-indent-offset 2)
-            (setq-local tsx-ts-mode-indent-offset 2)
-            (when (fboundp 'lsp-workspace-folders-add)
-              (lsp-workspace-folders-add (project-root (project-current))))))
-
-;; Ensure web-mode uses the same indentation style
+;; Configure web-mode for JSX files
 (use-package web-mode
   :ensure t
   :mode (("\\.jsx\\'" . web-mode))
@@ -220,8 +181,26 @@
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2))
 
-;; Disable LSP formatting for TypeScript/TSX files
+;; LSP-specific settings for TypeScript/TSX
 (with-eval-after-load 'lsp-mode
-  (setq-default lsp-typescript-format-enable nil))
+  (setq lsp-typescript-preferences-import-module-specifier "relative"
+        lsp-typescript-preferences-quote-style "single"
+        lsp-typescript-format-enable t
+        lsp-typescript-format-insert-space-after-comma t
+        lsp-typescript-format-insert-space-after-semicolon-in-for-statements t
+        lsp-typescript-format-indent-size 2
+        lsp-typescript-format-convert-tabs-to-spaces t
+        lsp-typescript-suggest-complete-function-calls t
+        lsp-typescript-implementations-code-lens-enabled t
+        lsp-typescript-references-code-lens-enabled t))
+
+;; Disable LSP formatting to respect project settings
+(with-eval-after-load 'lsp-mode
+  (setq lsp-enable-on-type-formatting nil
+        lsp-enable-indentation nil
+        lsp-before-save-hook nil
+        lsp-format-buffer-on-save nil))
+
 (provide 'db-development)
+
 ;;; db-development.el ends here

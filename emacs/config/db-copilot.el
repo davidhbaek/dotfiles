@@ -1,23 +1,4 @@
-;; Bootstrap straight.el
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-;; Configure use-package with straight.el
-(straight-use-package 'use-package)
-(require 'use-package)
-(use-package straight
-  :custom
-  (straight-use-package-by-default t))
+;; Copilot is now available on MELPA - no need for straight.el
 
 ;; Dependencies for copilot-chat
 (use-package markdown-mode)
@@ -26,12 +7,13 @@
 
 ;; Copilot configuration
 (use-package copilot
-  :straight (:host github :repo "copilot-emacs/copilot.el" :files ("dist" "*.el"))
   :ensure t
   :hook (prog-mode . copilot-mode)
   :config
-  ;; Increase max characters
-  (setq copilot-max-char 200000)
+  ;; Increase max characters to handle larger files
+  (setq copilot-max-char 500000)
+  ;; Add indentation configuration to prevent warnings
+  (setq copilot-indent-offset-warning-disable t)
   ;; Key bindings
   (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
   (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion))
