@@ -122,6 +122,11 @@ alias gob="$HOME/bin/gob"
 
 # alias for Tackle to set AWS_PROFILE, login to code artifact to pull libraries, and log in to SSO
 alias start-day='(export AWS_PROFILE=mgmt-appeng && aws sso login && aws codeartifact login --tool pip --domain tackle-codeartifact --repository tackle-codeartifact-pypi --domain-owner 730998372749 --region us-west-2 && aws ecr --profile mgmt-appeng get-login-password | docker login --username AWS --password-stdin 730998372749.dkr.ecr.us-west-2.amazonaws.com)'
+
+alias get-auth-token='auth0 login && auth0 test token GELulnhrGpwWrvSpCWC4bP0cTZJUVpPk -a https://upstream-api.tackle.io -s - --force --json | jq -r .access_token | pbcopy'
+
+alias set-auth-token='get-auth-token && export AUTH0_BEARER_TOKEN=$(pbpaste) && echo "AUTH0_BEARER_TOKEN set to: $AUTH0_BEARER_TOKEN"'
+
 FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT='true' # opt out of sending Azure Functions Core CLI usage
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=2'

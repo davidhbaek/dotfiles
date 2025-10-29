@@ -148,9 +148,6 @@
 
 ;; Configure the typescript tree-sitter mode
 (with-eval-after-load 'typescript-ts-mode
-  ;; Enhance syntax highlighting for JSX/TSX elements
-  (setq typescript-ts-mode-indent-offset 2)
-  
   ;; Set up custom faces for different TSX elements
   (custom-set-faces
    ;; Make component names stand out
@@ -175,30 +172,17 @@
 ;; Configure web-mode for JSX files
 (use-package web-mode
   :ensure t
-  :mode (("\\.jsx\\'" . web-mode))
-  :config
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2))
+  :mode (("\\.jsx\\'" . web-mode)))
 
 ;; LSP-specific settings for TypeScript/TSX
 (with-eval-after-load 'lsp-mode
   (setq lsp-typescript-preferences-import-module-specifier "relative"
         lsp-typescript-preferences-quote-style "single"
-        lsp-typescript-format-enable t
-        lsp-typescript-format-insert-space-after-comma t
-        lsp-typescript-format-insert-space-after-semicolon-in-for-statements t
-        lsp-typescript-format-indent-size 2
-        lsp-typescript-format-convert-tabs-to-spaces t
         lsp-typescript-suggest-complete-function-calls t
         lsp-typescript-implementations-code-lens-enabled t
-        lsp-typescript-references-code-lens-enabled t))
-
-;; Disable LSP formatting to respect project settings
-(with-eval-after-load 'lsp-mode
-  (setq lsp-enable-on-type-formatting nil
+        lsp-typescript-references-code-lens-enabled t
+        lsp-enable-on-type-formatting nil
         lsp-enable-indentation nil
-        lsp-before-save-hook nil
         lsp-format-buffer-on-save nil))
 
 (provide 'db-development)
