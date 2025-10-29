@@ -36,6 +36,7 @@
          ("C-x b" . counsel-ibuffer)    ; Enhanced buffer switching
          ("C-x C-f" . counsel-find-file)  ; Enhanced file opening
          ("C-x r j" . counsel-register)
+         ("M-y" . counsel-yank-pop)      ; Enhanced kill ring browser
          :map minibuffer-local-map
          ("C-r" . counsel-minibuffer-history))
   :config

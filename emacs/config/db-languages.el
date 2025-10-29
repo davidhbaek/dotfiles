@@ -144,11 +144,10 @@
   (setq lsp-typescript-max-ts-server-memory 3072
         lsp-file-watch-threshold 5000))
 
-;; JSX/TSX configuration
+;; JSX configuration (TSX handled by tsx-ts-mode in db-development.el)
 (use-package jtsx
   :ensure t
-  :mode (("\\.jsx\\'" . jtsx-jsx-mode)
-         ("\\.tsx\\'" . jtsx-tsx-mode))
+  :mode (("\\.jsx\\'" . jtsx-jsx-mode))
   :init
   (add-hook 'jtsx-mode-hook #'jtsx-setup-buffer)
   :config
