@@ -127,6 +127,51 @@ alias get-auth-token='auth0 login && auth0 test token GELulnhrGpwWrvSpCWC4bP0cTZ
 
 alias set-auth-token='get-auth-token && export AUTH0_BEARER_TOKEN=$(pbpaste) && echo "AUTH0_BEARER_TOKEN set to: $AUTH0_BEARER_TOKEN"'
 
+# 'ocx' -> OpenCode Explain
+#
+# Usage:
+#   ocx npm run build
+#   ocx pytest
+#
+# This function runs the provided command, captures its combined stdout/stderr,
+# and if the command exits with a non-zero status code, it pipes the
+# full output to 'opencode run' for an explanation.
+ocx() {
+  if [ $# -eq 0 ]; then
+    echo "Usage: ocx <command-to-run>"
+    return 1
+  fi
+
+  # Create a temporary file to capture the command's output
+  local TEMP_FILE
+  TEMP_FILE=$(mktemp)
+  
+  # Execute the command, using tee to both display output in real-time
+  # and capture it to the temp file. Redirect stderr to stdout first.
+  "$@" 2>&1 | tee "$TEMP_FILE"
+  
+  # In zsh, pipestatus is lowercase and 1-indexed (first command is pipestatus[1])
+  local EXIT_CODE=${pipestatus[1]}
+  
+  # Read the captured output
+  local OUTPUT
+  OUTPUT=$(cat "$TEMP_FILE")
+  
+  # Clean up the temp file
+  rm "$TEMP_FILE"
+
+  if [ $EXIT_CODE -ne 0 ]; then
+    # If the command failed (non-zero exit code)
+    echo "--- Command Failed (Exit Code: $EXIT_CODE). Piping to opencode for analysis... ---"
+    
+    # Pipe the captured output to 'opencode run'
+    echo "$OUTPUT" | opencode run "The following command failed: '$*'. Read the command and the resultant logs carefully. Analyze the output, explain what occured, and help me determine the root cause. Ask clarifying questions as needed."
+  else
+    # If the command succeeded
+    echo "--- Command Succeeded (Exit Code: 0) ---"
+  fi
+}
+
 FUNCTIONS_CORE_TOOLS_TELEMETRY_OPTOUT='true' # opt out of sending Azure Functions Core CLI usage
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=2'
