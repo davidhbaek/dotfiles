@@ -11,7 +11,7 @@ export GOPATH=$HOME/go
 export PATH="${PATH}:${GOPATH}/bin"
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/david.baek/.oh-my-zsh"
+export ZSH="/Users/davidbaek/.oh-my-zsh"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -184,11 +184,11 @@ bindkey "^[[B" history-search-forward
 source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-#[ -f "/Users/david.baek/.ghcup/env" ] && source "/Users/david.baek/.ghcup/env" # ghcup-env
+#[ -f "/Users/davidbaek/.ghcup/env" ] && source "/Users/davidbaek/.ghcup/env" # ghcup-env
 
 # source /usr/local/share/chruby/chruby.sh
 
-[ -f "/Users/david.baek/.ghcup/env" ] && source "/Users/david.baek/.ghcup/env" # ghcup-env
+[ -f "/Users/davidbaek/.ghcup/env" ] && source "/Users/davidbaek/.ghcup/env" # ghcup-env
 
 
 export NVM_DIR="$HOME/.nvm"
