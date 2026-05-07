@@ -4,8 +4,11 @@
 (use-package gptel
   :config
 
-(setq gptel-model 'claude-3.7-sonnet
-      gptel-backend (gptel-make-gh-copilot "Copilot"))
+(setq gptel-model 'qwen2.5:32b
+        gptel-backend (gptel-make-ollama "Ollama"
+                        :host "localhost:11434"
+                        :stream t
+                        :models '(qwen2.5:32b)))
 
   ;; Optional: Enable Org mode as the default mode for gptel buffers
   (setq gptel-default-mode 'org-mode)
