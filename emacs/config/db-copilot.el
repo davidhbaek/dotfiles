@@ -37,18 +37,7 @@
          ("C-c C-f" . copilot-chat-focus)))
 
 
-;; Install acme-theme if not already installed
-(unless (package-installed-p 'acme-theme)
-  (package-refresh-contents)
-  (package-install 'acme-theme))
-
-;; Load the Acme theme for CoPilot
-(require 'acme-theme)
-
-;; Your existing Zenburn theme likely remains the default theme
-;; But CoPilot code blocks will use Acme theme colors
-
-;; Define custom faces for CoPilot code blocks using Acme theme colors
+;; Define custom faces for CoPilot code blocks (GitHub-style colors)
 (defface copilot-code-block-face
   '((t (:background "#f6f8fa" :foreground "#181818"))) ; Acme light background and text color
   "Face for CoPilot code blocks using Acme theme colors.")
