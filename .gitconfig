@@ -1,9 +1,14 @@
 [user]
 	name = davidhbaek
 	email = 75276692+davidhbaek@users.noreply.github.com
+	signingkey = A8698EE5EDE12147
 [pager]
 	branch = false
 [core]
 	pushRemote = no_push
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+[commit]
+	gpgsign = true
+[gpg]
+	program = gpg
