@@ -12,16 +12,26 @@
 
 ;; Remove visual clutter
 (setq inhibit-startup-message t)  ; No splash screen
-(toggle-scroll-bar -1)            ; No scroll bars
 (tool-bar-mode -1)               ; No toolbar
 (tooltip-mode -1)                ; No tooltips
-(set-fringe-mode 10)             ; Add some padding on the sides
 (menu-bar-mode -1)               ; No menu bar
 
 ;; Basic display settings
 (column-number-mode)                    ; Show column number in mode line
 (global-display-line-numbers-mode t)    ; Show line numbers
-(set-face-attribute 'default nil :height 180)  ; Larger font size
+
+;; Graphical-only settings deferred for daemon compatibility
+(defun db/apply-graphical-ui (&optional frame)
+  "Apply UI settings that require a graphical display."
+  (when (display-graphic-p (or frame (selected-frame)))
+    (with-selected-frame (or frame (selected-frame))
+      (toggle-scroll-bar -1)
+      (set-fringe-mode 10)
+      (set-face-attribute 'default nil :height 150))))
+
+(if (daemonp)
+    (add-hook 'after-make-frame-functions #'db/apply-graphical-ui)
+  (add-hook 'after-init-hook #'db/apply-graphical-ui))
 
 ;; Editor defaults
 (setq-default tab-width 4)              ; 4 spaces per tab

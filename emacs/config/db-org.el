@@ -47,36 +47,42 @@
 ;; Enable inline images by default
 (setq org-startup-with-inline-images t)
 
-;; Org face configuration using JetBrains Mono
-(let* ((fixed-pitch '(:font "JetBrains Mono"))
-       (variable-tuple
-        (cond ((x-list-fonts "JetBrains Mono") '(:font "JetBrains Mono"))
-              ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
-              ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
-              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
-              ((x-list-fonts "Verdana")         '(:font "Verdana"))
-              ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
-              (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
-       (headline           `(:inherit default)))
-  (custom-theme-set-faces
-   'user
-   `(org-level-8 ((t (,@headline ,@variable-tuple))))
-   `(org-level-7 ((t (,@headline ,@variable-tuple))))
-   `(org-level-6 ((t (,@headline ,@variable-tuple))))
-   `(org-level-5 ((t (,@headline ,@variable-tuple))))
-   `(org-level-4 ((t (,@headline ,@variable-tuple))))
-   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.1))))
-   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
-   `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.5))))
-   `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))
-   ;; Additional faces to ensure fixed-pitch (JetBrains Mono) for code and text
-   `(org-block ((t (:inherit fixed-pitch))))
-   `(org-code ((t (:inherit (shadow fixed-pitch)))))
-   `(org-table ((t (:inherit fixed-pitch))))
-   `(org-verbatim ((t (:inherit (shadow fixed-pitch)))))
-   `(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   `(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   `(org-checkbox ((t (:inherit fixed-pitch))))))
+;; Org face configuration using JetBrains Mono — deferred for daemon compatibility
+(defun db/set-org-faces (&optional frame)
+  "Set org-mode faces. Deferred so x-list-fonts works in daemon mode."
+  (when (display-graphic-p (or frame (selected-frame)))
+    (let* ((fixed-pitch '(:font "JetBrains Mono"))
+           (variable-tuple
+            (cond ((x-list-fonts "JetBrains Mono") '(:font "JetBrains Mono"))
+                  ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+                  ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+                  ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+                  ((x-list-fonts "Verdana")         '(:font "Verdana"))
+                  ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+                  (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+           (headline `(:inherit default)))
+      (custom-theme-set-faces
+       'user
+       `(org-level-8 ((t (,@headline ,@variable-tuple))))
+       `(org-level-7 ((t (,@headline ,@variable-tuple))))
+       `(org-level-6 ((t (,@headline ,@variable-tuple))))
+       `(org-level-5 ((t (,@headline ,@variable-tuple))))
+       `(org-level-4 ((t (,@headline ,@variable-tuple))))
+       `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.1))))
+       `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
+       `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.5))))
+       `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))
+       `(org-block ((t (:inherit fixed-pitch))))
+       `(org-code ((t (:inherit (shadow fixed-pitch)))))
+       `(org-table ((t (:inherit fixed-pitch))))
+       `(org-verbatim ((t (:inherit (shadow fixed-pitch)))))
+       `(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+       `(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+       `(org-checkbox ((t (:inherit fixed-pitch))))))))
+
+(if (daemonp)
+    (add-hook 'after-make-frame-functions #'db/set-org-faces)
+  (add-hook 'after-init-hook #'db/set-org-faces))
 
 ;; Better bullet points in org-mode
 (use-package org-superstar
@@ -91,6 +97,29 @@
                                      ("-" . "•")
                                      ("+" . "•"))))
 
+;; Word deletion without polluting the kill ring
+(defun db/delete-word (arg)
+  (interactive "p")
+  (delete-region (point) (progn (forward-word arg) (point))))
+
+(defun db/backward-delete-word (arg)
+  (interactive "p")
+  (delete-region (point) (progn (backward-word arg) (point))))
+
+(global-set-key (kbd "M-d") #'db/delete-word)
+(global-set-key (kbd "M-DEL") #'db/backward-delete-word)
+
+;; helpers for capturing wrap up notes
+(defun db/org-weekly-review ()
+  "Capture a weekly review note."
+  (interactive)
+  (org-roam-dailies-capture-today nil nil "w"))
+
+(defun db/org-meeting-notes ()
+  "Capture meeting notes."
+  (interactive)
+  (org-roam-dailies-capture-today nil nil "m"))
+
 ;; Org-roam configuration for note-taking
 (use-package org-roam
   :ensure t
@@ -100,10 +129,29 @@
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n i" . org-roam-node-insert)
+         ("C-c n d" . org-roam-dailies-capture-today)
+         ("C-c n y" . org-roam-dailies-goto-yesterday)
+         ("C-c n w" . db/org-weekly-review)
+         ("C-c n m" . db/org-meeting-notes)
          :map org-mode-map
          ("C-M-i" . completion-at-point))
   :config
   (org-roam-setup))
+
+;; Template for end of day/week wrap up notes
+(setq org-roam-dailies-capture-templates
+  '(("d" "daily" entry
+     "* Done\n- %?\n\n* Learned\n- \n\n* First thing tomorrow\n- \n\n* Open loops\n- "
+     :target (file+head "%<%Y-%m-%d>.org"
+                        "#+title: %<%Y-%m-%d>\n#+filetags: :daily:\n"))
+    ("w" "weekly" entry
+     "* Week of %<%Y-%m-%d>\n** Wins\n- %?\n\n** Patterns\n- \n\n** Next week's focus\n- "
+     :target (file+head "weekly/%<%Y-W%W>.org"
+                        "#+title: Week %<%W>, %<%Y>\n#+filetags: :weekly:\n"))
+    ("m" "meeting" entry
+     "* %^{Title} %<%Y-%m-%d>\n** Attendees\n- %?\n\n** Notes\n- \n\n** Action items\n- "
+     :target (file+head "meetings/%<%Y-%m-%d>-%^{slug}.org"
+                        "#+title: %^{Title}\n#+filetags: :meeting:\n"))))
 
 ;; Presentation mode configuration
 (defun efs/presentation-setup()

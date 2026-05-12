@@ -31,17 +31,16 @@
    (t
     (message "Warning: Neither JetBrains Mono nor Menlo found. Using system default font."))))
 
-;; Set font at startup
-(db/set-default-font)
+;; Defer font setup until a graphical frame exists (required for daemon mode)
+(defun db/setup-fonts-for-frame (&optional frame)
+  "Apply font settings to FRAME, or current frame if nil."
+  (when (display-graphic-p (or frame (selected-frame)))
+    (with-selected-frame (or frame (selected-frame))
+      (db/set-default-font))))
 
-;; Force the default font configuration to take precedence
-;; This is run at a hook to ensure it happens after other configuration
-(defun db/enforce-font-settings ()
-  "Ensure font settings are applied correctly at startup."
-  (db/set-default-font))
-
-;; Add to startup hook to ensure fonts are set correctly
-(add-hook 'after-init-hook #'db/enforce-font-settings)
+(if (daemonp)
+    (add-hook 'after-make-frame-functions #'db/setup-fonts-for-frame)
+  (add-hook 'after-init-hook #'db/setup-fonts-for-frame))
 
 (provide 'db-fonts)
 ;;; db-fonts.el ends here

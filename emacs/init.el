@@ -46,3 +46,7 @@
 
 (provide 'init)
 ;;; init.el ends here
+
+;; Inherit PATH from shell (needed for gpg and other homebrew binaries)
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
