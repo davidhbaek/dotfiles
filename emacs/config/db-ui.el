@@ -83,14 +83,15 @@ This syncs cursor shape manually whenever window selection changes."
 ;; Font and Face Configuration
 ;; ====================================
 
-;; Default faces and themes
+;; Face tweaks. The `default` face is intentionally left alone so that
+;; `emacs -nw` inherits the terminal's colors; GUI colors come from zenburn
+;; and the GUI font from db-fonts.el (both graphical-only).
 (custom-set-faces
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#3F3F3F" :foreground "#DCDCCC" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 160 :width normal :foundry "nil" :family "Menlo"))))
- '(fixed-pitch ((t (:family "Monospace"))))
- '(org-document-title ((t (:inherit default :font "Lucida Grande" :height 2.0 :underline nil))))
- '(org-level-1 ((t (:inherit default :font "Lucida Grande" :height 1.5))))
- '(org-level-2 ((t (:inherit default :font "Lucida Grande" :height 1.3))))
- '(org-level-3 ((t (:inherit default :font "Lucida Grande" :height 1.1))))
+ '(fixed-pitch ((t (:family "JetBrains Mono"))))
+ '(org-document-title ((t (:inherit default :font "Lucida Grande" :underline nil))))
+ '(org-level-1 ((t (:inherit default :font "Lucida Grande" :height 1.25))))
+ '(org-level-2 ((t (:inherit default :font "Lucida Grande" :height 1.25))))
+ '(org-level-3 ((t (:inherit default :font "Lucida Grande" :height 1.25))))
  '(org-level-4 ((t (:inherit default :font "Lucida Grande"))))
  '(org-level-5 ((t (:inherit default :font "Lucida Grande"))))
  '(org-level-6 ((t (:inherit default :font "Lucida Grande"))))
