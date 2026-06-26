@@ -150,6 +150,11 @@ validation lambdas by calling them with 0 arguments."
   :config
   (editorconfig-mode 1))
 
+;; .env file support — covers .env and any .env.<suffix> (.env.staging, etc.)
+(use-package dotenv-mode
+  :ensure t
+  :mode ("\\.env\\(\\..*\\)?\\'" . dotenv-mode))
+
 ;; NOTE: TypeScript/JavaScript/TSX configuration lives in db-languages.el.
 
 (provide 'db-development)
