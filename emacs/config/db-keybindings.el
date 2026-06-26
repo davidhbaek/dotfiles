@@ -30,6 +30,8 @@
 (global-set-key (kbd "M-w") 'kill-region)     ; Cut (different from default)
 (global-set-key (kbd "C-j") 'pop-global-mark) ; Jump to previous mark
 (global-set-key (kbd "C-k") 'unpop-to-mark-command)  ; Jump forward in mark ring
+(global-set-key (kbd "M-d") #'db/delete-word)            ; Delete word forward (no kill ring)
+(global-set-key (kbd "M-DEL") #'db/backward-delete-word) ; Delete word backward (no kill ring)
 
 ;; Window movement
 (when (fboundp 'windmove-default-keybindings)
