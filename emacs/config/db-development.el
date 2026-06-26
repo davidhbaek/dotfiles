@@ -42,11 +42,18 @@
     ;; Rebuild Projectile's cache to apply the changes
     (projectile-invalidate-cache nil)))
 
+(defun db/magit-completing-read (prompt choices &optional predicate require-match initial-input hist def)
+  "Like `magit-builtin-completing-read' but calls `completing-read-default'
+directly to bypass ivy-mode, which mishandles Magit's 1-arg require-match
+validation lambdas by calling them with 0 arguments."
+  (completing-read-default prompt choices predicate require-match initial-input hist def))
+
 (use-package magit
   :defer
   :commands (magit-status magit-get-current-branch)
   :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  (magit-completing-read-function #'db/magit-completing-read))
 
 (use-package forge
   :after magit
