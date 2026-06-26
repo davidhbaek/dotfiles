@@ -133,7 +133,18 @@
 (defun db/org-meeting-notes ()
   "Capture meeting notes."
   (interactive)
-  (org-roam-dailies-capture-today nil nil "m"))
+  (let* ((name (read-string "Meeting name: "))
+         (date (format-time-string "%Y-%m-%d"))
+         (title (format "%s %s" name date))
+         (slug (replace-regexp-in-string "[^a-zA-Z0-9]+" "-" (downcase name)))
+         (file (format "meetings/%s-%s.org" date slug)))
+    (org-roam-capture-
+     :node (org-roam-node-create :title title)
+     :templates `(("m" "meeting" plain
+                   "** Attendees\n- %?\n\n** Notes\n- \n\n** Action items\n- "
+                   :target (file+head ,file
+                                      ,(format "#+title: %s\n#+filetags: :meeting:\n" title))
+                   :unnarrowed t)))))
 
 ;; Org-roam configuration for note-taking
 (use-package org-roam
@@ -163,10 +174,7 @@
      "* Week of %<%Y-%m-%d>\n** Wins\n- %?\n\n** Patterns\n- \n\n** Next week's focus\n- "
      :target (file+head "weekly/%<%Y-W%W>.org"
                         "#+title: Week %<%W>, %<%Y>\n#+filetags: :weekly:\n"))
-    ("m" "meeting" entry
-     "* %^{Title} %<%Y-%m-%d>\n** Attendees\n- %?\n\n** Notes\n- \n\n** Action items\n- "
-     :target (file+head "meetings/%<%Y-%m-%d>-%^{slug}.org"
-                        "#+title: %^{Title}\n#+filetags: :meeting:\n"))))
+))
 
 ;; Presentation mode configuration
 (defun efs/presentation-setup()
