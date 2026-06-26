@@ -60,8 +60,7 @@ validation lambdas by calling them with 0 arguments."
   :ensure t)
 
 ;; GitHub pull request integration
-(setq browse-url-browser-function 'browse-url-default-macosx-browser)
-
+;; (browse-url-browser-function is configured in db-ui.el)
 (defun endless/visit-pull-request-url ()
   "Visit the current branch's PR on Github."
   (interactive)
@@ -151,58 +150,7 @@ validation lambdas by calling them with 0 arguments."
   :config
   (editorconfig-mode 1))
 
-;; Modern TypeScript/TSX configuration for Emacs 29
-;; This uses the built-in tree-sitter support for superior syntax highlighting
-
-;; Define the grammar sources for TypeScript/TSX
-;; This tells Emacs where to download the necessary parsers
-(setq treesit-language-source-alist
-      '((typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")))
-
-;; Set up file associations for TypeScript and TSX files
-;; This ensures .tsx files open in tsx-ts-mode and .ts files in typescript-ts-mode
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-
-;; Configure the typescript tree-sitter mode
-(with-eval-after-load 'typescript-ts-mode
-  ;; Set up custom faces for different TSX elements
-  (custom-set-faces
-   ;; Make component names stand out
-   '(typescript-ts-jsx-tag-face ((t :inherit font-lock-function-name-face :weight bold)))
-   ;; Style attributes distinctly
-   '(typescript-ts-jsx-attribute-face ((t :inherit font-lock-constant-face)))
-   ;; Style JSX text content
-   '(typescript-ts-jsx-text-face ((t :inherit default))))
-
-  ;; Add development tools to TSX editing
-  (add-hook 'tsx-ts-mode-hook
-            (lambda ()
-              ;; Enable LSP support
-              (lsp-deferred)
-              ;; Show matching parentheses
-              (show-paren-mode 1)
-              ;; Enable automatic bracket/quote pairing
-              (electric-pair-mode 1)
-              ;; Add colorful parentheses
-              (rainbow-delimiters-mode 1))))
-
-;; Configure web-mode for JSX files
-(use-package web-mode
-  :ensure t
-  :mode (("\\.jsx\\'" . web-mode)))
-
-;; LSP-specific settings for TypeScript/TSX
-(with-eval-after-load 'lsp-mode
-  (setq lsp-typescript-preferences-import-module-specifier "relative"
-        lsp-typescript-preferences-quote-style "single"
-        lsp-typescript-suggest-complete-function-calls t
-        lsp-typescript-implementations-code-lens-enabled t
-        lsp-typescript-references-code-lens-enabled t
-        lsp-enable-on-type-formatting nil
-        lsp-enable-indentation nil
-        lsp-format-buffer-on-save nil))
+;; NOTE: TypeScript/JavaScript/TSX configuration lives in db-languages.el.
 
 (provide 'db-development)
 

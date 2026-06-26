@@ -107,9 +107,48 @@
   (sp-local-pair 'python-mode "[" "]")
   (sp-local-pair 'python-mode "{" "}"))
 
-; =======================================
+;; =======================================
 ;; TypeScript and JavaScript Configuration
 ;; =======================================
+
+;; Modern TypeScript/TSX configuration for Emacs 29 using built-in tree-sitter.
+;; Define the grammar sources so Emacs knows where to download the parsers.
+(setq treesit-language-source-alist
+      '((typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")))
+
+;; File associations: .tsx -> tsx-ts-mode, .ts -> typescript-ts-mode.
+;; (typescript-mode below re-claims .ts; ordering preserved from prior config.)
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+
+;; Configure the typescript tree-sitter mode
+(with-eval-after-load 'typescript-ts-mode
+  ;; Set up custom faces for different TSX elements
+  (custom-set-faces
+   ;; Make component names stand out
+   '(typescript-ts-jsx-tag-face ((t :inherit font-lock-function-name-face :weight bold)))
+   ;; Style attributes distinctly
+   '(typescript-ts-jsx-attribute-face ((t :inherit font-lock-constant-face)))
+   ;; Style JSX text content
+   '(typescript-ts-jsx-text-face ((t :inherit default))))
+
+  ;; Add development tools to TSX editing
+  (add-hook 'tsx-ts-mode-hook
+            (lambda ()
+              ;; Enable LSP support
+              (lsp-deferred)
+              ;; Show matching parentheses
+              (show-paren-mode 1)
+              ;; Enable automatic bracket/quote pairing
+              (electric-pair-mode 1)
+              ;; Add colorful parentheses
+              (rainbow-delimiters-mode 1))))
+
+;; Configure web-mode for JSX files (jtsx below re-claims .jsx)
+(use-package web-mode
+  :ensure t
+  :mode (("\\.jsx\\'" . web-mode)))
 
 ;; Core TypeScript settings
 (use-package typescript-mode
@@ -133,18 +172,23 @@
         lsp-typescript-format-insert-space-after-comma t
         lsp-typescript-format-insert-space-after-semicolon-in-for-statements t
         lsp-typescript-surveys-enabled nil)
-  
+
   ;; Enhanced TypeScript features
   (setq lsp-typescript-suggest-complete-function-calls t
         lsp-typescript-implementations-code-lens-enabled t
         lsp-typescript-references-code-lens-enabled t
         lsp-typescript-organize-imports-on-save t)
-  
+
+  ;; Formatting/indentation handled by external tools, not the LSP server
+  (setq lsp-enable-on-type-formatting nil
+        lsp-enable-indentation nil
+        lsp-format-buffer-on-save nil)
+
   ;; Performance optimizations for TypeScript
   (setq lsp-typescript-max-ts-server-memory 3072
         lsp-file-watch-threshold 5000))
 
-;; JSX configuration (TSX handled by tsx-ts-mode in db-development.el)
+;; JSX configuration (TSX handled by tsx-ts-mode above)
 (use-package jtsx
   :ensure t
   :mode (("\\.jsx\\'" . jtsx-jsx-mode))
