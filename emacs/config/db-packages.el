@@ -32,9 +32,19 @@
 ;; Theme and UI Enhancements
 ;; ====================================
 
-;; Set up custom theme path and load zenburn
+;; Set up custom theme path
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'zenburn t)
+
+;; Load zenburn only on graphical displays; a bare `emacs -nw` skips it
+;; and inherits Ghostty's own colors.
+(defun db/load-gui-theme (&optional frame)
+  "Load zenburn when FRAME is graphical."
+  (when (display-graphic-p (or frame (selected-frame)))
+    (load-theme 'zenburn t)))
+
+(if (daemonp)
+    (add-hook 'after-make-frame-functions #'db/load-gui-theme)
+  (db/load-gui-theme))
 
 ;; Modern mode line
 (use-package doom-modeline
