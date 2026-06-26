@@ -9,7 +9,7 @@
   :ensure t
   :when (or (executable-find "cmake") (executable-find "gmake") (executable-find "make"))
   :bind
-  ("C-c t" . vterm-other-window)
+  ("C-c t" . db/vterm-new)
   :custom
   (vterm-shell "/bin/zsh")
   (shell-file-name "/bin/zsh")
@@ -43,6 +43,10 @@
                   (vterm-copy-mode -1)
                   (vterm-send-C-k))))  ; Simulates delete to end of line
   
+  (defun db/vterm-new ()
+    (interactive)
+    (vterm (generate-new-buffer-name "vterm")))
+
   ;; Terminal setup hook
   (add-hook 'vterm-mode-hook
             (lambda ()
