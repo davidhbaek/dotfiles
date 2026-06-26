@@ -20,10 +20,10 @@
   (exec-path-from-shell-initialize))
 
 ;; Set up Go development environment
-(setenv "GOPATH" "/Users/davidbaek/go")
+(setenv "GOPATH" "/Users/david/go")
 
 ;; Configure system PATH
-(setenv "PATH" "/Users/davidbaek/.cabal/bin:/Users/davidbaek/.ghcup/bin:/Users/davidbaek/google-cloud-sdk/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/davidbaek/go/bin:/Users/davidbaek/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/davidbaek/go/bin:/usr/local/go/bin")
+(setenv "PATH" "/Users/david/.cabal/bin:/Users/david/.ghcup/bin:/Users/david/google-cloud-sdk/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/david/go/bin:/Users/david/go/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/david/go/bin:/usr/local/go/bin")
 
 (provide 'db-env)
 ;;; db-env.el ends here
