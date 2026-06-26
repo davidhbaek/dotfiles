@@ -20,7 +20,7 @@
   :defer
   :diminish projectile-mode
   :config (projectile-mode)
-  (setq projectile-project-search-path '("~/Desktop/repos"))
+  (setq projectile-project-search-path '("/Users/david/projects/"))
   ;; Enable project indexing for faster searches
   (setq projectile-indexing-method 'alien)
   ;; Enable caching for better performance with many projects
