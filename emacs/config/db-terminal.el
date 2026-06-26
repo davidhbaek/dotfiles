@@ -5,6 +5,13 @@
 
 ;;; Code:
 
+;; Defined at top level (not inside the use-package :config below) so the
+;; `:bind' entry resolves to a real command before vterm is loaded.
+(defun db/vterm-new ()
+  "Open a new vterm in a uniquely named buffer."
+  (interactive)
+  (vterm (generate-new-buffer-name "vterm")))
+
 (use-package vterm
   :ensure t
   :when (or (executable-find "cmake") (executable-find "gmake") (executable-find "make"))
@@ -42,10 +49,6 @@
                   (kill-ring-save (mark) (point))
                   (vterm-copy-mode -1)
                   (vterm-send-C-k))))  ; Simulates delete to end of line
-  
-  (defun db/vterm-new ()
-    (interactive)
-    (vterm (generate-new-buffer-name "vterm")))
 
   ;; Terminal setup hook
   (add-hook 'vterm-mode-hook
