@@ -96,6 +96,13 @@ validation lambdas by calling them with 0 arguments."
   :ensure t
   :hook (terraform-mode . terraform-format-on-save-mode))
 
+(use-package diff-hl
+  :ensure t
+  :config
+  (global-diff-hl-mode)
+  (diff-hl-flydiff-mode)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+
 ;; Additional LSP configuration for file watching
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.opt\\'")
