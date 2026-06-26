@@ -87,9 +87,14 @@ validation lambdas by calling them with 0 arguments."
   :ensure t
   :hook ((go-mode . lsp-deferred)   ; Enable LSP for Go
          (python-mode . lsp-deferred) ; Enable LSP for Python
-         (typescript-mode . lsp-deferred)) ; Enable LSP for TypeScript
+         (typescript-mode . lsp-deferred) ; Enable LSP for TypeScript
+         (terraform-mode . lsp-deferred)) ; Enable LSP for Terraform
   :config
   (lsp-enable-which-key-integration t))
+
+(use-package terraform-mode
+  :ensure t
+  :hook (terraform-mode . terraform-format-on-save-mode))
 
 ;; Additional LSP configuration for file watching
 (with-eval-after-load 'lsp-mode
