@@ -71,6 +71,15 @@ This syncs cursor shape manually whenever window selection changes."
 (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 
 ;; ====================================
+;; Tab bar (browser-style tabs / workspaces)
+;; ====================================
+;; Command is `super' (s-) on this build, so this auto-binds s-1..s-9
+;; (Cmd+1..Cmd+9) to select tabs, just like the browser and Ghostty.
+(setq tab-bar-select-tab-modifiers '(super))
+(setq tab-bar-show 1)                    ; show the bar only once >1 tab exists
+(tab-bar-mode 1)
+
+;; ====================================
 ;; Font and Face Configuration
 ;; ====================================
 
