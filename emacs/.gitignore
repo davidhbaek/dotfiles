@@ -1,0 +1,22 @@
+# Package installs
+/elpa/
+
+# Generated caches and runtime state
+/.cache/
+/.lsp-session-v1
+/.org-id-locations
+/auto-save-list/
+/org-persist/
+/transient/
+/forge-database.sqlite
+/org-roam.db
+/projectile-bookmarks.eld
+
+# History and session files
+/bookmarks
+/history
+/places
+/recentf
+
+# Auto-generated Custom settings
+/custom.el
