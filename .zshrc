@@ -188,7 +188,7 @@ source $ZSH/oh-my-zsh.sh
 
 # source /usr/local/share/chruby/chruby.sh
 
-[ -f "/Users/david/.ghcup/env" ] && source "/Users/david /.ghcup/env" # ghcup-env
+[ -f "/Users/david/.ghcup/env" ] && source "/Users/david/.ghcup/env" # ghcup-env
 
 
 export NVM_DIR="$HOME/.nvm"
