@@ -39,5 +39,16 @@ Otherwise, just insert the typed character."
   (if (eolp) (let (parens-require-spaces) (insert-pair))
     (self-insert-command 1)))
 
+;; Word deletion without polluting the kill ring
+(defun db/delete-word (arg)
+  "Delete ARG words forward without saving to the kill ring."
+  (interactive "p")
+  (delete-region (point) (progn (forward-word arg) (point))))
+
+(defun db/backward-delete-word (arg)
+  "Delete ARG words backward without saving to the kill ring."
+  (interactive "p")
+  (delete-region (point) (progn (backward-word arg) (point))))
+
 (provide 'db-functions)
 ;;; db-functions.el ends here
