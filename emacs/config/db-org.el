@@ -22,13 +22,27 @@
 (use-package org
   :hook (org-mode . db/org-mode-setup)
   :config
-  (setq org-ellipsis " ▾")           ; Use this symbol for collapsed sections
-  (setq org-hide-emphasis-markers t)  ; Hide markup symbols
-  (setq org-src-tab-acts-natively t)  ; Better tab behavior in source blocks
-  ;; Force org-mode to use JetBrains Mono
+  (setq org-ellipsis " ▾")
+  (setq org-hide-emphasis-markers t)
+  (setq org-src-tab-acts-natively t)
   (custom-set-faces
    '(org-default ((t (:family "JetBrains Mono")))))
-  (set-face-attribute 'fixed-pitch nil :family "JetBrains Mono"))
+  (set-face-attribute 'fixed-pitch nil :family "JetBrains Mono")
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (mermaid . t)))
+  (add-hook 'org-babel-after-execute-hook
+            (lambda ()
+              (when-let* ((result (cdr (assoc :file org-babel-last-header-args)))
+                          (file (expand-file-name result)))
+                (when (file-exists-p file)
+                  (find-file-other-window file))))))
+
+(use-package ob-mermaid
+  :ensure t
+  :config
+  (setq ob-mermaid-cli-path "/opt/homebrew/bin/mmdc"))
 
 ;; Custom bullet appearance for lists - replaced with org-superstar
 
