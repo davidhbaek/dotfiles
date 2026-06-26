@@ -37,5 +37,17 @@
 (when (string= system-type "darwin")
   (setq dired-use-ls-dired nil))  ; Fix for macOS ls command
 
+;; ====================================
+;; Buffer Cleanup (midnight-mode)
+;; ====================================
+
+;; Auto-kill stale buffers so the long-lived daemon doesn't accumulate them.
+(use-package midnight
+  :ensure nil  ; Built into Emacs
+  :config
+  (midnight-mode 1)
+  ;; Kill buffers untouched for 7+ days; clean-buffer-list runs daily at 00:00
+  (setq clean-buffer-list-delay-general 7))
+
 (provide 'db-file-management)
 ;;; db-file-management.el ends here
