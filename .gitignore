@@ -1,2 +1,5 @@
 .DS_Store
 *#
+
+# Hammerspoon secret fallback (Slack token + secret ICS URL) — never commit
+hammerspoon/secrets.lua

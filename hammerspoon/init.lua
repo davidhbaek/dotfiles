@@ -37,3 +37,6 @@ end
 
 -- Cmd+Ctrl+E avoids Emacs's Meta (Option) and Super (Cmd) bindings
 hs.hotkey.bind({"cmd", "ctrl"}, "e", toggleEmacsVisibility)
+
+-- Sync Google Calendar -> Slack status (skips Focus Time)
+require("calendar_slack_status")
