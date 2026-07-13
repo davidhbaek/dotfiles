@@ -59,6 +59,44 @@ validation lambdas by calling them with 0 arguments."
   :after magit
   :ensure t)
 
+(defun db/linear-url-to-branch (input)
+  "Convert a Linear issue URL to a git branch name like ENG-2540-title.
+Given e.g. \"https://linear.app/helmhealth/issue/ENG-2540/search-api-foo\"
+return \"ENG-2540-search-api-foo\".  When INPUT is not a Linear issue URL
+it is returned trimmed and unchanged, so an already-formatted branch name
+passes straight through."
+  (let ((s (string-trim input)))
+    (if (string-match "linear\\.app/[^/]+/issue/\\([^/]+\\)/\\([^/?#]+\\)" s)
+        (concat (match-string 1 s) "-" (match-string 2 s))
+      s)))
+
+(defun db/magit-worktree-from-linear (url)
+  "Create a git worktree and branch from a Linear issue URL.
+Paste the full Linear URL (or an existing branch name) at the prompt; it
+is converted with `db/linear-url-to-branch' and used as both the new
+branch name and, by default, the worktree directory name (a sibling of
+the current repository)."
+  (interactive "sLinear issue URL or branch name: ")
+  (let* ((branch (db/linear-url-to-branch url))
+         (start-point (magit-read-branch-or-commit
+                       (format "Create %s starting from" branch)))
+         (default (expand-file-name
+                   branch
+                   (file-name-directory
+                    (directory-file-name (magit-toplevel)))))
+         (path (read-directory-name "Create worktree at: " default)))
+    (magit-worktree-branch path branch start-point)))
+
+(global-set-key (kbd "C-c g w") #'db/magit-worktree-from-linear)
+
+;; Route Magit's worktree transient (the `Z' menu in the status buffer) so
+;; that `c' -- "branch and worktree" -- uses the Linear-aware command.  It is
+;; a superset of `magit-worktree-branch': a plain branch name pasted at the
+;; prompt passes through unchanged, a Linear URL is auto-formatted.
+(with-eval-after-load 'magit
+  (transient-replace-suffix 'magit-worktree "c"
+    '("c" "branch and worktree" db/magit-worktree-from-linear)))
+
 ;; GitHub pull request integration
 ;; (browse-url-browser-function is configured in db-ui.el)
 (defun endless/visit-pull-request-url ()

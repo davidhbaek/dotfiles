@@ -30,7 +30,7 @@
 (require 'db-keybindings)
 (require 'db-env)
 (require 'db-jira)
-(require 'db-terminal)
+(require 'db-ghostel)
 (require 'db-fonts)
 
 ;; Set up the tree-sitter load path

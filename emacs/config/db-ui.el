@@ -41,17 +41,6 @@
 (setq blink-cursor-interval 0.5)
 (setq cursor-in-non-selected-windows 'hollow)
 
-(defun db/vterm-sync-cursor ()
-  "vterm manages its own cursor, so cursor-in-non-selected-windows doesn't apply.
-This syncs cursor shape manually whenever window selection changes."
-  (dolist (win (window-list nil 'no-minibuf))
-    (with-current-buffer (window-buffer win)
-      (when (derived-mode-p 'vterm-mode)
-        (setq-local cursor-type
-                    (if (eq win (selected-window)) t 'hollow))))))
-
-(add-hook 'window-state-change-hook #'db/vterm-sync-cursor)
-
 ;; Editor defaults
 (setq-default tab-width 4)              ; 4 spaces per tab
 (setq-default js-indent-level 2)        ; 2 space indent for JS
