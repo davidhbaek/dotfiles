@@ -73,17 +73,18 @@ passes straight through."
 (defun db/magit-worktree-from-linear (url)
   "Create a git worktree and branch from a Linear issue URL.
 Paste the full Linear URL (or an existing branch name) at the prompt; it
-is converted with `db/linear-url-to-branch' and used as both the new
-branch name and, by default, the worktree directory name (a sibling of
-the current repository)."
+is converted with `db/linear-url-to-branch' and used as the new branch
+name.  The default worktree directory is a sibling of the current
+repository named \"<repo>_<branch>\" so worktrees stay grouped next to
+their source repo."
   (interactive "sLinear issue URL or branch name: ")
   (let* ((branch (db/linear-url-to-branch url))
          (start-point (magit-read-branch-or-commit
                        (format "Create %s starting from" branch)))
+         (top (directory-file-name (magit-toplevel)))
          (default (expand-file-name
-                   branch
-                   (file-name-directory
-                    (directory-file-name (magit-toplevel)))))
+                   (concat (file-name-nondirectory top) "_" branch)
+                   (file-name-directory top)))
          (path (read-directory-name "Create worktree at: " default)))
     (magit-worktree-branch path branch start-point)))
 
