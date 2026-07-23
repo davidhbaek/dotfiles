@@ -29,7 +29,6 @@
 (require 'db-functions)
 (require 'db-keybindings)
 (require 'db-env)
-(require 'db-jira)
 (require 'db-ghostel)
 (require 'db-fonts)
 
